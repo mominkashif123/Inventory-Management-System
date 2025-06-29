@@ -2,11 +2,18 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-const { testConnection, executeQuery } = require('./config/database');
+// Import routes
+const productRoutes = require('./routes/products');
+const userRoutes = require('./routes/users');
+
+// Import models for table creation
+const Product = require('./models/Product');
+const User = require('./models/User');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   credentials: true
@@ -14,35 +21,40 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Inventory Management System API is running',
-    database: 'PostgreSQL',
-    version: '1.0.0'
+// API Routes
+app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    error: 'Something went wrong!',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
   });
 });
 
-app.get('/api/test-db', async (req, res) => {
-  try {
-    const result = await executeQuery('SELECT NOW() as current_time');
-    if (!result.success) {
-      return res.status(500).json(result);
-    }
-    res.json({
-      success: true,
-      data: result.data[0],
-      message: 'Database connection successful'
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
+// 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({ success: false, error: 'Route not found' });
+  res.status(404).json({ 
+    success: false,
+    error: 'Route not found' 
+  });
 });
 
+// Start server
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  await testConnection();
+  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔗 API URL: http://localhost:${PORT}`);
+  console.log(`🗄️ Database: PostgreSQL (Session Pooler)`);
+  console.log(`📦 Products API: http://localhost:${PORT}/api/products`);
+  console.log(`👤 Users API: http://localhost:${PORT}/api/users`);
+  
+  // Create tables if not exist
+  await Product.createTable();
+  await User.createTable();
 });
+
+module.exports = app;
