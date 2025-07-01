@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({ username: '', password: '', role: 'admin' });
+  const [form, setForm] = useState({ username: '', password: '', confirmPassword: '' });
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = e => {
@@ -13,45 +14,77 @@ export default function RegisterPage() {
   const handleSubmit = async e => {
     e.preventDefault();
     setError(null);
-    if (!form.username || !form.password) {
-      setError('Username and password are required');
+    setLoading(true);
+    if (form.password !== form.confirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
       return;
     }
-    const res = await fetch('http://localhost:5000/api/users/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
-    });
-    const data = await res.json();
-    if (data.success) {
-      navigate('/login');
-    } else {
-      setError(data.error || 'Registration failed');
-    }
+    // Dummy register logic for now
+    setTimeout(() => {
+      if (form.username && form.password) {
+        navigate('/login');
+      } else {
+        setError('Please fill all fields');
+      }
+      setLoading(false);
+    }, 1000);
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Register</h2>
-      {error && <div className="text-red-600 mb-2">{error}</div>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block mb-1 font-medium">Username</label>
-          <input name="username" value={form.username} onChange={handleChange} className="w-full border px-3 py-2 rounded" required />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-white">
+      <div className="bg-white border border-orange-200 p-8 rounded-xl shadow-xl w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">Register</h1>
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4">{error}</div>}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">Username</label>
+            <input
+              name="username"
+              value={form.username}
+              onChange={handleChange}
+              className="bg-white border border-orange-200 rounded px-3 py-2 w-full focus:border-orange-500 focus:ring-orange-500/20"
+              placeholder="Enter your username"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">Password</label>
+            <input
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={handleChange}
+              className="bg-white border border-orange-200 rounded px-3 py-2 w-full focus:border-orange-500 focus:ring-orange-500/20"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">Confirm Password</label>
+            <input
+              name="confirmPassword"
+              type="password"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              className="bg-white border border-orange-200 rounded px-3 py-2 w-full focus:border-orange-500 focus:ring-orange-500/20"
+              placeholder="Confirm your password"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold py-3 rounded-xl hover:scale-105 transform transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
+            {loading ? 'Registering...' : 'Register'}
+          </button>
+        </form>
+        <div className="mt-6 text-center">
+          <span className="text-gray-600">Already have an account? </span>
+          <Link to="/login" className="text-orange-600 hover:underline">Login</Link>
         </div>
-        <div>
-          <label className="block mb-1 font-medium">Password</label>
-          <input name="password" value={form.password} onChange={handleChange} type="password" className="w-full border px-3 py-2 rounded" required />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium">Role</label>
-          <select name="role" value={form.role} onChange={handleChange} className="w-full border px-3 py-2 rounded">
-            <option value="admin">Admin</option>
-            <option value="staff">Staff</option>
-          </select>
-        </div>
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Register</button>
-      </form>
+      </div>
     </div>
   );
-} 
+}

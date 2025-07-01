@@ -16,7 +16,7 @@ class ProductController {
   static async getProductById(req, res) {
     try {
       const { id } = req.params;
-      const result = await Product.findById(id);
+      const result = await Product.findById(id); 
       if (!result.success) return res.status(500).json(result);
       if (result.rowCount === 0) return res.status(404).json({ success: false, error: 'Product not found' });
       res.json({ success: true, data: result.data[0] });

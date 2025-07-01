@@ -11,6 +11,7 @@ class Product {
         quantity DECIMAL(10,3) DEFAULT 0,
         value DECIMAL(10,2),
         part_number VARCHAR(100),
+        type VARCHAR(50) NOT NULL DEFAULT 'accessories' CHECK (type IN ('accessories', 'merchandise', 'workshop')),
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )
