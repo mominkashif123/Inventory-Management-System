@@ -12,6 +12,7 @@ class Product {
         value DECIMAL(10,2),
         part_number VARCHAR(100),
         type VARCHAR(50) NOT NULL DEFAULT 'accessories' CHECK (type IN ('accessories', 'merchandise', 'workshop')),
+        location VARCHAR(255) DEFAULT 'warehouse' CHECK (location IN ('warehouse', 'store')),
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )
@@ -33,18 +34,18 @@ class Product {
 
   // Create new product
   static async create(productData) {
-    const { name, description, quantity, value, part_number } = productData;
+    const { name, description, quantity, value, part_number, type = 'accessories', location = 'warehouse' } = productData;
     const query = `
-      INSERT INTO products (name, description, quantity, value, part_number)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO products (name, description, quantity, value, part_number, type, location)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
     `;
-    return await executeQuery(query, [name, description, quantity, value, part_number]);
+    return await executeQuery(query, [name, description, quantity, value, part_number, type, location]);
   }
 
   // Update product
   static async update(id, productData) {
-    const { name, description, quantity, value, part_number } = productData;
+    const { name, description, quantity, value, part_number, type = 'accessories', location = 'warehouse' } = productData;
     const query = `
       UPDATE products SET
         name = $1,
@@ -52,11 +53,13 @@ class Product {
         quantity = $3,
         value = $4,
         part_number = $5,
+        type = $6,
+        location = $7,
         updated_at = NOW()
-      WHERE id = $6
+      WHERE id = $8
       RETURNING *
     `;
-    return await executeQuery(query, [name, description, quantity, value, part_number, id]);
+    return await executeQuery(query, [name, description, quantity, value, part_number, type, location, id]);
   }
 
   // Delete product
@@ -73,6 +76,12 @@ class Product {
       ORDER BY name
     `;
     return await executeQuery(query, [`%${searchTerm}%`]);
+  }
+
+  // Delete all products by type
+  static async deleteByType(type) {
+    const query = 'DELETE FROM products WHERE type = $1';
+    return await executeQuery(query, [type]);
   }
 }
 

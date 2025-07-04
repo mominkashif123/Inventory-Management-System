@@ -28,9 +28,9 @@ class ProductController {
   // Create new product
   static async createProduct(req, res) {
     try {
-      const { name, description, quantity, value, part_number } = req.body;
+      const { name, description, quantity, value, part_number, type = 'accessories', location = 'warehouse' } = req.body;
       if (!name) return res.status(400).json({ success: false, error: 'Product name is required' });
-      const result = await Product.create({ name, description, quantity, value, part_number });
+      const result = await Product.create({ name, description, quantity, value, part_number, type, location });
       if (!result.success) return res.status(400).json(result);
       res.status(201).json({ success: true, data: result.data[0], message: 'Product created successfully' });
     } catch (error) {
@@ -42,8 +42,8 @@ class ProductController {
   static async updateProduct(req, res) {
     try {
       const { id } = req.params;
-      const { name, description, quantity, value, part_number } = req.body;
-      const result = await Product.update(id, { name, description, quantity, value, part_number });
+      const { name, description, quantity, value, part_number, type = 'accessories', location = 'warehouse' } = req.body;
+      const result = await Product.update(id, { name, description, quantity, value, part_number, type, location });
       if (!result.success) return res.status(400).json(result);
       if (result.rowCount === 0) return res.status(404).json({ success: false, error: 'Product not found' });
       res.json({ success: true, data: result.data[0], message: 'Product updated successfully' });

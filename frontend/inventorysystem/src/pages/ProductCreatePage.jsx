@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Save, ArrowLeft, Package } from 'lucide-react';
 
 const ProductCreatePage = () => {
-  const [form, setForm] = useState({ name: '', description: '', quantity: '', value: '', part_number: '', type: 'accessories' });
+  const [form, setForm] = useState({ name: '', description: '', quantity: '', value: '', part_number: '', type: 'accessories', location: 'warehouse' });
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
@@ -14,6 +14,10 @@ const ProductCreatePage = () => {
 
   const handleTypeChange = e => {
     setForm({ ...form, type: e.target.value });
+  };
+
+  const handleLocationChange = e => {
+    setForm({ ...form, location: e.target.value });
   };
 
   const handleSubmit = async e => {
@@ -107,6 +111,18 @@ const ProductCreatePage = () => {
                   <option value="accessories">Accessories</option>
                   <option value="merchandise">Merchandise</option>
                   <option value="workshop">Workshop</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-gray-700 font-medium text-sm">Location</label>
+                <select
+                  name="location"
+                  value={form.location}
+                  onChange={handleLocationChange}
+                  className="bg-white border border-orange-200 rounded px-3 py-2 w-full"
+                >
+                  <option value="warehouse">Warehouse</option>
+                  <option value="store">Store</option>
                 </select>
               </div>
             </div>

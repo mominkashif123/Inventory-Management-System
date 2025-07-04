@@ -8,6 +8,9 @@ export default function ProductsPage() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [filterLocation, setFilterLocation] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const PRODUCTS_PER_PAGE = 50;
 
   useEffect(() => {
     fetch('http://localhost:5000/api/products')
@@ -34,8 +37,19 @@ export default function ProductsPage() {
     if (filterType !== 'all') {
       filtered = filtered.filter(product => product.type === filterType);
     }
+    if (filterLocation !== 'all') {
+      filtered = filtered.filter(product => product.location === filterLocation);
+    }
     setFilteredProducts(filtered);
-  }, [products, searchTerm, filterType]);
+    setCurrentPage(1); // Reset to first page on filter/search change
+  }, [products, searchTerm, filterType, filterLocation]);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * PRODUCTS_PER_PAGE,
+    currentPage * PRODUCTS_PER_PAGE
+  );
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this product?')) return;
@@ -75,6 +89,15 @@ export default function ProductsPage() {
           <option value="merchandise">Merchandise</option>
           <option value="workshop">Workshop</option>
         </select>
+        <select
+          value={filterLocation}
+          onChange={e => setFilterLocation(e.target.value)}
+          className="px-4 py-2 border border-orange-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
+        >
+          <option value="all">All Locations</option>
+          <option value="warehouse">Warehouse</option>
+          <option value="store">Store</option>
+        </select>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded shadow">
@@ -82,6 +105,7 @@ export default function ProductsPage() {
             <tr>
               <th className="py-2 px-4 border-b">Name</th>
               <th className="py-2 px-4 border-b">Type</th>
+              <th className="py-2 px-4 border-b">Location</th>
               <th className="py-2 px-4 border-b">Description</th>
               <th className="py-2 px-4 border-b">Quantity</th>
               <th className="py-2 px-4 border-b">Value</th>
@@ -90,12 +114,12 @@ export default function ProductsPage() {
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.length === 0 ? (
+            {paginatedProducts.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center py-8 text-gray-500">No products found.</td>
+                <td colSpan={8} className="text-center py-8 text-gray-500">No products found.</td>
               </tr>
             ) : (
-              filteredProducts.map(product => (
+              paginatedProducts.map(product => (
                 <tr key={product.id} className="hover:bg-gray-50">
                   <td className="py-2 px-4 border-b"><Link className="text-blue-600 hover:underline" to={`/products/${product.id}`}>{product.name}</Link></td>
                   <td className="py-2 px-4 border-b">
@@ -107,6 +131,7 @@ export default function ProductsPage() {
                       {product.type}
                     </span>
                   </td>
+                  <td className="py-2 px-4 border-b">{product.location}</td>
                   <td className="py-2 px-4 border-b">{product.description}</td>
                   <td className="py-2 px-4 border-b">{product.quantity}</td>
                   <td className="py-2 px-4 border-b">{product.value}</td>
@@ -121,6 +146,26 @@ export default function ProductsPage() {
           </tbody>
         </table>
       </div>
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 mt-6">
+          <button
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-orange-200 text-orange-800 rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <button
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-orange-200 text-orange-800 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

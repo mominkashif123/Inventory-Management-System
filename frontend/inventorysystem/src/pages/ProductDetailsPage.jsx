@@ -67,6 +67,7 @@ export default function ProductDetailsPage() {
           <div className="mb-2"><span className="font-medium">Quantity:</span> {product.quantity}</div>
           <div className="mb-2"><span className="font-medium">Value:</span> {product.value}</div>
           <div className="mb-2"><span className="font-medium">Part Number:</span> {product.part_number}</div>
+          <div className="mb-2"><span className="font-medium">Location:</span> {product.location}</div>
           <div className="mt-4">
             <Link to={`/products/${product.id}/edit`} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 mr-2">Edit</Link>
             <Link to="/products" className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Back to Products</Link>

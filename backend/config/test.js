@@ -1,20 +1,10 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+process.env.POSTGRES_CONNECTION_STRING = 'postgresql://postgres.hlikmlkuvjesandbdtfm:VI2ot4SyoilwL1rT@aws-0-ap-south-1.pooler.supabase.com:5432/postgres';
 
-const pool = new Pool({
-  connectionString: 'postgresql://postgres.hlikmlkuvjesandbdtfm:VI2ot4SyoilwL1rT@aws-0-ap-south-1.pooler.supabase.com:5432/postgres',
-  ssl: { rejectUnauthorized: false }
-});
+const Product = require('../models/Product');
 
-async function dropProductsTable() {
-  try {
-    await pool.query('DROP TABLE IF EXISTS products');
-    console.log('✅ Dropped products table');
-  } catch (err) {
-    console.error('❌ Error dropping products table:', err);
-  } finally {
-    await pool.end();
-  }
+async function deleteAllMerchandise() {
+  const result = await Product.deleteByType('merchandise');
+  console.log(`Deleted ${result.rowCount} merchandise products from the database.`);
 }
 
-dropProductsTable();
+deleteAllMerchandise();
