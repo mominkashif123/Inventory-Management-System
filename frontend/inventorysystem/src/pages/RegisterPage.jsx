@@ -20,15 +20,22 @@ export default function RegisterPage() {
       setLoading(false);
       return;
     }
-    // Dummy register logic for now
-    setTimeout(() => {
-      if (form.username && form.password) {
-        navigate('/login');
+    try {
+      const res = await fetch('http://localhost:5000/api/users/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: form.username, password: form.password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setError(data.error || 'Registration failed');
       } else {
-        setError('Please fill all fields');
+        navigate('/login');
       }
-      setLoading(false);
-    }, 1000);
+    } catch (err) {
+      setError('Registration failed. Please try again.');
+    }
+    setLoading(false);
   };
 
   return (

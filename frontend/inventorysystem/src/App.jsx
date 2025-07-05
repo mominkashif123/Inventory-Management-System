@@ -7,18 +7,21 @@ import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ProductEditPage from "./pages/ProductEditPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => (
   <BrowserRouter>
     <Navbar />
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/products" element={<ProductsPage />} />
-      <Route path="/products/new" element={<ProductCreatePage />} />
-      <Route path="/products/:id" element={<ProductDetailsPage />} />
-      <Route path="/products/:id/edit" element={<ProductEditPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/products/new" element={<ProductCreatePage />} />
+        <Route path="/products/:id" element={<ProductDetailsPage />} />
+        <Route path="/products/:id/edit" element={<ProductEditPage />} />
+      </Route>
     </Routes>
   </BrowserRouter>
 );

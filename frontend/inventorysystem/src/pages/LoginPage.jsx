@@ -15,15 +15,25 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    // Dummy login logic for now
-    setTimeout(() => {
-      if (form.username === 'admin' && form.password === 'admin') {
-        navigate('/products');
+    try {
+      const res = await fetch('http://localhost:5000/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: form.username, password: form.password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        localStorage.removeItem('isLoggedIn');
+        setError(data.error || 'Invalid credentials');
       } else {
-        setError('Invalid credentials');
+        localStorage.setItem('isLoggedIn', 'true');
+        navigate('/products');
       }
-      setLoading(false);
-    }, 1000);
+    } catch (err) {
+      setError('Login failed. Please try again.');
+      localStorage.removeItem('isLoggedIn');
+    }
+    setLoading(false);
   };
 
   return (

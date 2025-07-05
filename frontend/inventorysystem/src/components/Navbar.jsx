@@ -1,19 +1,29 @@
-
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Package, Home, LogIn, UserPlus, Menu, X } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Package, Home, LogIn, UserPlus, Menu, X, LogOut } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path) => location.pathname === path;
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    navigate('/login');
+  };
 
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
-    { path: '/products', label: 'Products', icon: Package },
-    { path: '/login', label: 'Login', icon: LogIn },
-    { path: '/register', label: 'Register', icon: UserPlus },
+    ...(isLoggedIn ? [
+      { path: '/products', label: 'Products', icon: Package },
+    ] : []),
+    ...(!isLoggedIn ? [
+      { path: '/login', label: 'Login', icon: LogIn },
+      { path: '/register', label: 'Register', icon: UserPlus },
+    ] : []),
   ];
 
   return (
@@ -46,6 +56,15 @@ const Navbar = () => {
                 <span className="font-medium">{label}</span>
               </Link>
             ))}
+            {isLoggedIn && (
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-600 hover:text-orange-600 hover:bg-orange-50 transition-all duration-300"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="font-medium">Logout</span>
+              </button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -76,6 +95,15 @@ const Navbar = () => {
                   <span className="font-medium">{label}</span>
                 </Link>
               ))}
+              {isLoggedIn && (
+                <button
+                  onClick={() => { setIsOpen(false); handleLogout(); }}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:text-orange-600 hover:bg-orange-50 transition-all duration-300"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="font-medium">Logout</span>
+                </button>
+              )}
             </div>
           </div>
         )}
