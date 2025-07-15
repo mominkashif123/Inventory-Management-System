@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Save, ArrowLeft, Package } from 'lucide-react';
+import authFetch from '../utils/authFetch';
 
 const ProductEditPage = () => {
   const { id } = useParams();
@@ -11,7 +12,7 @@ const ProductEditPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products/${id}`)
+    authFetch(`http://localhost:5000/api/products/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -49,7 +50,7 @@ const ProductEditPage = () => {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const res = await authFetch(`http://localhost:5000/api/products/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

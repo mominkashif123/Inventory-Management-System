@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Save, ArrowLeft, Package } from 'lucide-react';
+import authFetch from '../utils/authFetch';
 
 const ProductCreatePage = () => {
   const [form, setForm] = useState({ name: '', description: '', quantity: '', value: '', part_number: '', type: 'accessories', location: 'warehouse' });
@@ -30,7 +31,7 @@ const ProductCreatePage = () => {
       return;
     }
     try {
-      const res = await fetch('http://localhost:5000/api/products', {
+      const res = await authFetch('http://localhost:5000/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

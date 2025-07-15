@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Package, Home, LogIn, UserPlus, Menu, X, LogOut } from 'lucide-react';
+import { Package, LogIn, UserPlus, Menu, X, LogOut, BarChart2, ShoppingCart, ClipboardList, Settings } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,17 +8,28 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const isActive = (path) => location.pathname === path;
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const token = localStorage.getItem('token');
+  const isLoggedIn = !!token && !!user;
+  const role = user?.role;
 
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     navigate('/login');
   };
 
   const navItems = [
-    { path: '/', label: 'Home', icon: Home },
     ...(isLoggedIn ? [
+      { path: '/dashboard', label: 'Dashboard', icon: BarChart2 },
       { path: '/products', label: 'Products', icon: Package },
+      { path: '/sales', label: 'Sales', icon: ClipboardList },
+      { path: '/checkout', label: 'Checkout', icon: ShoppingCart },
+      { path: '/inventory-adjustments', label: 'Inventory', icon: Settings },
+      ...(role === 'admin' ? [
+        { path: '/users', label: 'Users', icon: UserPlus },
+        { path: '/audit-logs', label: 'Audit Logs', icon: ClipboardList },
+      ] : []),
     ] : []),
     ...(!isLoggedIn ? [
       { path: '/login', label: 'Login', icon: LogIn },
@@ -27,21 +38,21 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-xl border-b border-orange-100 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
+    <nav className="sticky top-0 w-full z-50 bg-gradient-to-r from-orange-50 to-white/95 backdrop-blur-xl border-b border-orange-100 shadow-md">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+        <div className="flex justify-between items-center py-4 gap-2">
           {/* Logo */}
           <Link to="/" className="group flex items-center gap-3">
             <div className="p-2 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl group-hover:rotate-12 transition-transform">
               <Package className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-orange-600 bg-clip-text text-transparent">
-              Inventory Pro
+              THS Management System
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-10">
             {navItems.map(({ path, label, icon: Icon }) => (
               <Link
                 key={path}
@@ -78,7 +89,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden py-4 border-t border-orange-100 animate-fade-in">
+          <div className="md:hidden py-4 border-t border-orange-100 animate-fade-in bg-white/95 rounded-b-xl shadow-md">
             <div className="flex flex-col gap-2">
               {navItems.map(({ path, label, icon: Icon }) => (
                 <Link

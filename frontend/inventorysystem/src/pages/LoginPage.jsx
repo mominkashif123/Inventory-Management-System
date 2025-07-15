@@ -23,10 +23,12 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setError(data.error || 'Invalid credentials');
       } else {
-        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.data));
         navigate('/products');
       }
     } catch (err) {

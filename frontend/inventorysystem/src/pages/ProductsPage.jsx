@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import authFetch from '../utils/authFetch';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -11,9 +12,11 @@ export default function ProductsPage() {
   const [filterLocation, setFilterLocation] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const PRODUCTS_PER_PAGE = 50;
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/products')
+    authFetch('http://localhost:5000/api/products')
       .then(res => res.json())
       .then(res => {
         setProducts(res.data || []);
@@ -40,9 +43,15 @@ export default function ProductsPage() {
     if (filterLocation !== 'all') {
       filtered = filtered.filter(product => product.location === filterLocation);
     }
+    if (minPrice !== '') {
+      filtered = filtered.filter(product => Number(product.value) >= Number(minPrice));
+    }
+    if (maxPrice !== '') {
+      filtered = filtered.filter(product => Number(product.value) <= Number(maxPrice));
+    }
     setFilteredProducts(filtered);
     setCurrentPage(1); // Reset to first page on filter/search change
-  }, [products, searchTerm, filterType, filterLocation]);
+  }, [products, searchTerm, filterType, filterLocation, minPrice, maxPrice]);
 
   // Pagination logic
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
@@ -53,7 +62,7 @@ export default function ProductsPage() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this product?')) return;
-    await fetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
+    await authFetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
     setProducts(products.filter(p => p.id !== id));
   };
 
@@ -78,6 +87,20 @@ export default function ProductsPage() {
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
           className="flex-1 px-4 py-2 border border-orange-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
+        />
+        <input
+          type="number"
+          placeholder="Min Price"
+          value={minPrice}
+          onChange={e => setMinPrice(e.target.value)}
+          className="w-32 px-4 py-2 border border-orange-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
+        />
+        <input
+          type="number"
+          placeholder="Max Price"
+          value={maxPrice}
+          onChange={e => setMaxPrice(e.target.value)}
+          className="w-32 px-4 py-2 border border-orange-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
         />
         <select
           value={filterType}
@@ -133,7 +156,11 @@ export default function ProductsPage() {
                   </td>
                   <td className="py-2 px-4 border-b">{product.location}</td>
                   <td className="py-2 px-4 border-b">{product.description}</td>
-                  <td className="py-2 px-4 border-b">{product.quantity}</td>
+                  <td className="py-2 px-4 border-b">{product.quantity}
+                    {product.quantity < 1 && (
+                      <span className="ml-2 text-xs text-red-600 font-semibold">Out of stock</span>
+                    )}
+                  </td>
                   <td className="py-2 px-4 border-b">{product.value}</td>
                   <td className="py-2 px-4 border-b">{product.part_number}</td>
                   <td className="py-2 px-4 border-b">

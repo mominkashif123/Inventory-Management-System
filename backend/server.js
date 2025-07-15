@@ -5,10 +5,18 @@ require('dotenv').config();
 // Import routes
 const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
+const salesRoutes = require('./routes/sales');
+const inventoryAdjustmentsRoutes = require('./routes/inventoryAdjustments');
+const reportsRoutes = require('./routes/reports');
+const auditLogsRoutes = require('./routes/auditLogs');
 
 // Import models for table creation
 const Product = require('./models/Product');
 const User = require('./models/User');
+const Sale = require('./models/Sale');
+const SaleItem = require('./models/SaleItem');
+const InventoryAdjustment = require('./models/InventoryAdjustment');
+const AuditLog = require('./models/AuditLog');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,6 +32,10 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/sales', salesRoutes);
+app.use('/api/inventory-adjustments', inventoryAdjustmentsRoutes);
+app.use('/api/reports', reportsRoutes);
+app.use('/api/audit-logs', auditLogsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -55,6 +67,10 @@ app.listen(PORT, async () => {
   // Create tables if not exist
   await Product.createTable();
   await User.createTable();
+  await Sale.createTable();
+  await SaleItem.createTable();
+  await InventoryAdjustment.createTable();
+  await AuditLog.createTable();
 });
 
 module.exports = app;

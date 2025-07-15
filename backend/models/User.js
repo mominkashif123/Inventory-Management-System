@@ -51,6 +51,11 @@ class User {
     const query = 'DELETE FROM users WHERE id = $1 RETURNING *';
     return await executeQuery(query, [id]);
   }
+
+  // Check if user has a specific role
+  static hasRole(user, role) {
+    return user.role === role;
+  }
 }
 
 module.exports = User; 

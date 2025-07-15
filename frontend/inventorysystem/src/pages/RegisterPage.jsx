@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import authFetch from '../utils/authFetch';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ username: '', password: '', confirmPassword: '' });
@@ -21,7 +22,7 @@ export default function RegisterPage() {
       return;
     }
     try {
-      const res = await fetch('http://localhost:5000/api/users/register', {
+      const res = await authFetch('http://localhost:5000/api/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: form.username, password: form.password })

@@ -13,6 +13,7 @@ class Product {
         part_number VARCHAR(100),
         type VARCHAR(50) NOT NULL DEFAULT 'accessories' CHECK (type IN ('accessories', 'merchandise', 'workshop')),
         location VARCHAR(255) DEFAULT 'warehouse' CHECK (location IN ('warehouse', 'store')),
+        min_quantity INTEGER DEFAULT 0,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )
@@ -60,6 +61,14 @@ class Product {
       RETURNING *
     `;
     return await executeQuery(query, [name, description, quantity, value, part_number, type, location, id]);
+  }
+
+  // Update product quantity by delta
+  static async updateQuantity(id, delta) {
+    const query = `
+      UPDATE products SET quantity = quantity + $1, updated_at = NOW() WHERE id = $2 RETURNING *
+    `;
+    return await executeQuery(query, [delta, id]);
   }
 
   // Delete product

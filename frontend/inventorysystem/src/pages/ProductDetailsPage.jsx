@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Package } from 'lucide-react';
+import authFetch from '../utils/authFetch';
 
 export default function ProductDetailsPage() {
   const { id } = useParams();
@@ -9,7 +10,7 @@ export default function ProductDetailsPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products/${id}`)
+    authFetch(`http://localhost:5000/api/products/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
