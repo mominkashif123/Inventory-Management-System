@@ -18,4 +18,4 @@ router.put('/:id/role', UserController.updateRole);
 // Delete user
 router.delete('/:id', UserController.delete);
 
-module.exports = router; 
+module.exports = router;  

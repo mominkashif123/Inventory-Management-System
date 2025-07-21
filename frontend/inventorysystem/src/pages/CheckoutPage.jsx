@@ -18,6 +18,9 @@ export default function CheckoutPage() {
   const [discountType, setDiscountType] = useState('percent');
   const [discountValue, setDiscountValue] = useState('');
   const [itemDiscounts, setItemDiscounts] = useState({}); // { product_id: { type: 'percent'|'fixed', value: '' } }
+  const [customerName, setCustomerName] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+  const [customerNumber, setCustomerNumber] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -95,7 +98,14 @@ export default function CheckoutPage() {
       const res = await authFetch('http://localhost:5000/api/sales', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: null, items: cart, payment_method: paymentMethod })
+        body: JSON.stringify({
+          user_id: null,
+          items: cart,
+          payment_method: paymentMethod,
+          customer_name: customerName || null,
+          customer_email: customerEmail || null,
+          customer_number: customerNumber || null
+        })
       });
       const data = await res.json();
       if (data.success) {
@@ -180,7 +190,7 @@ export default function CheckoutPage() {
             {filteredProducts.map(product => (
               <li key={product.id} className="flex flex-col md:flex-row md:items-center md:justify-between py-2 gap-2">
                 <div>
-                  <div className="font-semibold">{product.name} (${product.value})</div>
+                  <div className="font-semibold">{product.name} (${product.value}) <span className="text-xs text-gray-500 ml-2">Qty: {parseInt(product.quantity, 10)}</span></div>
                   <div className="text-xs text-gray-500">{product.description}</div>
                   <div className="text-xs text-gray-400">Part #: {product.part_number} | Type: {product.type} | Location: {product.location}</div>
                 </div>
@@ -196,6 +206,31 @@ export default function CheckoutPage() {
         </div>
         <div>
           <h3 className="font-semibold mb-2">Cart</h3>
+          {/* Customer Info Fields */}
+          <div className="mb-4 bg-orange-50 border border-orange-200 rounded-xl p-4 flex flex-col gap-3">
+            <h4 className="font-semibold text-orange-700 mb-2">Customer Information</h4>
+            <input
+              type="text"
+              placeholder="Customer Name"
+              value={customerName}
+              onChange={e => setCustomerName(e.target.value)}
+              className="border border-orange-200 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+            <input
+              type="email"
+              placeholder="Customer Email"
+              value={customerEmail}
+              onChange={e => setCustomerEmail(e.target.value)}
+              className="border border-orange-200 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+            <input
+              type="tel"
+              placeholder="Customer Number"
+              value={customerNumber}
+              onChange={e => setCustomerNumber(e.target.value)}
+              className="border border-orange-200 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            />
+          </div>
           {cart.length === 0 ? (
             <div className="text-gray-500">No items in cart.</div>
           ) : (

@@ -1,12 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import authFetch from '../utils/authFetch';
+import { saveAs } from 'file-saver';
 
 export default function SaleDetailsPage() {
   const { id } = useParams();
   const [sale, setSale] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // --- PDF Download State ---
+  const [pdfMonth, setPdfMonth] = useState(() => sale ? sale.created_at.slice(0, 7) : new Date().toISOString().slice(0, 7));
+  // --- PDF Download Handler ---
+  const handleDownloadPdf = async () => {
+    const month = pdfMonth;
+    const res = await fetch(`http://localhost:5000/api/reports/monthly-orders/pdf?month=${month}`, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+    if (!res.ok) {
+      alert('Failed to download PDF');
+      return;
+    }
+    const blob = await res.blob();
+    saveAs(blob, `sales-report-${month}.pdf`);
+  };
 
   useEffect(() => {
     authFetch(`http://localhost:5000/api/sales/${id}`)
@@ -31,6 +48,23 @@ export default function SaleDetailsPage() {
 
   return (
     <div className="pt-24 max-w-2xl mx-auto px-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+        <div>
+          <label className="font-medium mr-2">Download Monthly Sales PDF:</label>
+          <input
+            type="month"
+            value={pdfMonth}
+            onChange={e => setPdfMonth(e.target.value)}
+            className="border border-orange-200 rounded px-2 py-1 mr-2"
+          />
+          <button
+            onClick={handleDownloadPdf}
+            className="bg-orange-500 text-white px-4 py-2 rounded font-semibold hover:bg-orange-600 transition"
+          >
+            Download PDF
+          </button>
+        </div>
+      </div>
       <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-orange-100">
         <h2 className="text-3xl font-bold mb-4 text-orange-700 flex items-center gap-2">
           <span>Sale Details</span>

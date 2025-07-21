@@ -1,7 +1,6 @@
 const { executeQuery } = require('../config/database');
 
 class SaleItem {
-  // Create sale_items table if it doesn't exist
   static async createTable() {
     const query = `
       CREATE TABLE IF NOT EXISTS sale_items (
@@ -15,7 +14,6 @@ class SaleItem {
     return await executeQuery(query);
   }
 
-  // Create a new sale item
   static async create({ sale_id, product_id, quantity, price }) {
     const query = `
       INSERT INTO sale_items (sale_id, product_id, quantity, price)

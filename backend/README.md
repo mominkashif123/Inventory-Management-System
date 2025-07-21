@@ -12,7 +12,7 @@ npm install
 
 ### 2. Environment Configuration
 
-Create a `.env` file in the backend directory with your Supabase credentials:
+Create a `.env` file in the backend directory with your Supabase credentials and JWT secret:
 
 ```env
 # Supabase Configuration
@@ -26,6 +26,9 @@ NODE_ENV=development
 
 # CORS Configuration
 CORS_ORIGIN=http://localhost:3000
+
+# JWT Secret (required for authentication)
+JWT_SECRET=your_super_secret_key_here
 ```
 
 ### 3. Get Your Supabase Credentials

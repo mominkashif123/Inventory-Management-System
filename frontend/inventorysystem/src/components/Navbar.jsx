@@ -25,7 +25,7 @@ const Navbar = () => {
       { path: '/products', label: 'Products', icon: Package },
       { path: '/sales', label: 'Sales', icon: ClipboardList },
       { path: '/checkout', label: 'Checkout', icon: ShoppingCart },
-      { path: '/inventory-adjustments', label: 'Inventory', icon: Settings },
+      // { path: '/inventory-adjustments', label: 'Inventory', icon: Settings },
       ...(role === 'admin' ? [
         { path: '/users', label: 'Users', icon: UserPlus },
         { path: '/audit-logs', label: 'Audit Logs', icon: ClipboardList },

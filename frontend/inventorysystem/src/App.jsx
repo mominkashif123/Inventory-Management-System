@@ -19,15 +19,15 @@ const App = () => (
   <BrowserRouter>
     <Navbar />
     <Routes>
-      <Route path="/" element={<DashboardPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<DashboardPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/sales" element={<SalesPage />} />
         <Route path="/sales/:id" element={<SaleDetailsPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/inventory-adjustments" element={<InventoryAdjustmentsPage />} />
+        {/* <Route path="/inventory-adjustments" element={<InventoryAdjustmentsPage />} /> */}
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/products/new" element={<ProductCreatePage />} />
         <Route path="/products/:id" element={<ProductDetailsPage />} />

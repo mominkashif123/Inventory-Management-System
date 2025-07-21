@@ -1,44 +1,62 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import authFetch from '../utils/authFetch';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line, Scatter, CartesianGrid } from 'recharts';
+import { THS } from '../assets/index';
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState(null);
   const [inventoryValue, setInventoryValue] = useState(null);
   const [bestsellers, setBestsellers] = useState([]);
   const [lowStock, setLowStock] = useState([]);
-  const [salesTrends, setSalesTrends] = useState([]); // For chart
+  const [recentSales, setRecentSales] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showAllLowStock, setShowAllLowStock] = useState(false);
+  const [trendView, setTrendView] = useState('monthly'); // 'monthly' or 'yearly'
+  const [last7DaysSales, setLast7DaysSales] = useState([]);
 
+  // Month/year selection state
+  const now = new Date();
+  const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1); // 1-based
+  const [selectedYear, setSelectedYear] = useState(now.getFullYear());
+
+  // Helper for month name
+  const monthName = useMemo(() =>
+    new Date(selectedYear, selectedMonth - 1).toLocaleString('default', { month: 'long' }),
+    [selectedMonth, selectedYear]
+  );
+
+  // Fetch sales trend for selected month/year or year
   useEffect(() => {
+    setLoading(true);
+    let trendUrl = '';
+    if (trendView === 'monthly') {
+      trendUrl = `http://localhost:5000/api/reports/recent-sales?month=${selectedMonth}&year=${selectedYear}`;
+    } else {
+      trendUrl = `http://localhost:5000/api/reports/recent-sales?year=${selectedYear}&view=yearly`;
+    }
     Promise.all([
       authFetch('http://localhost:5000/api/reports/sales-summary').then(res => res.json()),
       authFetch('http://localhost:5000/api/reports/inventory-value').then(res => res.json()),
       authFetch('http://localhost:5000/api/reports/bestsellers').then(res => res.json()),
       authFetch('http://localhost:5000/api/reports/low-stock').then(res => res.json()),
-      // Simulate sales trends (replace with real endpoint if available)
-      Promise.resolve({ data: [
-        { date: '2025-07-10', total: 1200 },
-        { date: '2025-07-11', total: 1800 },
-        { date: '2025-07-12', total: 950 },
-        { date: '2025-07-13', total: 2100 },
-      ] })
-    ]).then(([summaryRes, valueRes, bestsellersRes, lowStockRes, trendsRes]) => {
+      authFetch(trendUrl).then(res => res.json()),
+      authFetch('http://localhost:5000/api/reports/recent-sales?last7=true').then(res => res.json())
+    ]).then(([summaryRes, valueRes, bestsellersRes, lowStockRes, recentSalesRes, last7Res]) => {
       setSummary(summaryRes.data);
       setInventoryValue(valueRes.data);
       setBestsellers(bestsellersRes.data || []);
       setLowStock(lowStockRes.data || []);
-      setSalesTrends(trendsRes.data || []);
+      setRecentSales(recentSalesRes.data || []);
+      setLast7DaysSales(last7Res.data || []);
       setLoading(false);
     }).catch(() => {
       setError('Failed to load dashboard data');
       setLoading(false);
     });
-  }, []);
+  }, [selectedMonth, selectedYear, trendView]);
 
   // Handler for clicking an out-of-stock product
   const handleProductClick = (product) => {
@@ -70,14 +88,27 @@ export default function DashboardPage() {
 
   // Prepare data for charts
   const productBreakdown = bestsellers.map(p => ({ name: p.name, value: p.total_sold }));
-  const lowStockCritical = lowStock.filter(p => p.quantity <= 0);
-  const lowStockWarning = lowStock.filter(p => p.quantity > 0);
+  // Only show products with quantity less than 2 in low stock alerts
+  const lowStockFiltered = lowStock.filter(p => p.quantity < 1);
+  const lowStockCritical = lowStockFiltered.filter(p => p.quantity <= 0);
+  const lowStockWarning = lowStockFiltered.filter(p => p.quantity > 0);
   const pieColors = ['#ff6600', '#ff9900', '#ffcc00', '#ff3300', '#ffb347', '#ff7f50', '#ff4500'];
-  const displayedLowStockWarning = showAllLowStock ? lowStockWarning : lowStockWarning.slice(0, 3);
+  const displayedLowStockWarning = lowStockWarning; // No slicing, show all
+
+  // Prepare data for the graph
+  const salesTrendData = trendView === 'monthly'
+    ? recentSales.map(day => ({
+        date: day.day,
+        total: Number(day.total_sales)
+      }))
+    : recentSales.map(month => ({
+        date: month.month,
+        total: Number(month.total_sales)
+      }));
 
   return (
-    <div className="pt-24 min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-orange-100 px-2 sm:px-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="pt-24 min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-black to-gray-800 text-orange-100 px-2 sm:px-4">
+      <div className="flex-1 max-w-7xl mx-auto w-full flex flex-col">
         {/* Out of Stock Alert Section */}
         {lowStockCritical.length > 0 && (
           <div className="bg-red-900/90 border-l-4 border-red-500 rounded-xl shadow-lg px-6 py-4 mb-8 flex flex-col gap-2">
@@ -138,7 +169,7 @@ export default function DashboardPage() {
         )}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <img src="https://www.harley-davidson.com/content/dam/h-d/images/logo/HD-Logo-Orange.png" alt="Harley-Davidson" className="h-12 w-auto" style={{ filter: 'drop-shadow(0 2px 8px #ff6600)' }} />
+            <img src={THS} alt="Harley-Davidson" className="h-12 w-auto" style={{ filter: 'drop-shadow(0 2px 8px #ff6600)' }} />
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight" style={{ fontFamily: harleyFont, letterSpacing: '2px' }}>
               THS Management System
             </h1>
@@ -180,7 +211,7 @@ export default function DashboardPage() {
             </ul>
           </div>
           <div className="bg-gray-900/80 rounded-xl p-6 shadow-lg flex flex-col items-center">
-            <div className="text-orange-400 text-lg font-bold mb-2">Low Stock Alerts</div>
+            <div className="text-orange-400 text-lg font-bold mb-2">Out of Stock Alerts</div>
             <ul className="w-full space-y-1">
               {lowStockCritical.length === 0 && lowStockWarning.length === 0 ? <li className="text-gray-400">All good!</li> : null}
               {lowStockCritical.map(p => (
@@ -192,34 +223,21 @@ export default function DashboardPage() {
               {displayedLowStockWarning.map(p => (
                 <li key={p.id} className="flex justify-between items-center text-sm bg-orange-900/60 text-orange-200 rounded px-2 py-1">
                   <span>{p.name}</span>
-                  <span>{p.quantity}</span>
+                  <span>{parseInt(p.quantity, 10)}</span>
                 </li>
               ))}
             </ul>
             {lowStockWarning.length > 3 && (
-              <button
-                className="mt-2 text-xs text-orange-400 hover:underline focus:outline-none"
-                onClick={() => setShowAllLowStock(v => !v)}
-              >
-                {showAllLowStock ? 'View Less' : 'View More'}
-              </button>
+              null
             )}
           </div>
           <div className="bg-gray-900/80 rounded-xl p-6 shadow-lg flex flex-col items-center">
             <div className="text-orange-400 text-lg font-bold mb-2">Sales (Last 7 Days)</div>
-            <ResponsiveContainer width="100%" height={180}>
-              <BarChart data={salesTrends} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                <XAxis dataKey="date" stroke="#ff9900" tick={{ fill: '#ff9900', fontWeight: 'bold' }} />
-                <YAxis stroke="#ff9900" tick={{ fill: '#ff9900' }} />
-                <Tooltip contentStyle={{ background: '#222', color: '#ff9900' }} />
-                <Bar dataKey="total" fill="#ff6600" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
             <ul className="w-full space-y-1 mt-2">
-              {salesTrends.length === 0 ? <li className="text-gray-400">No data</li> : salesTrends.map(s => (
-                <li key={s.date} className="flex justify-between items-center text-sm">
-                  <span>{s.date}</span>
-                  <span className="font-bold text-orange-300">${s.total}</span>
+              {last7DaysSales.length === 0 ? <li className="text-gray-400">No data</li> : last7DaysSales.map(sale => (
+                <li key={sale.id} className="flex justify-between items-center text-sm">
+                  <span>{new Date(sale.created_at).toLocaleDateString()} {new Date(sale.created_at).toLocaleTimeString()}</span>
+                  <span className="font-bold text-orange-300">${sale.total}</span>
                 </li>
               ))}
             </ul>
@@ -232,19 +250,56 @@ export default function DashboardPage() {
         </div>
         {/* Sales Chart Placeholder */}
         <div className="bg-gray-900/80 rounded-xl shadow-lg p-6 mb-10">
-          <div className="text-orange-400 text-lg font-bold mb-4">Sales Trend</div>
-          <div className="w-full h-48 flex items-end gap-2">
-            {salesTrends.length === 0 ? (
-              <div className="text-gray-400">No chart data</div>
-            ) : (
-              salesTrends.map((s, i) => (
-                <div key={s.date} className="flex-1 flex flex-col items-center">
-                  <div className="w-6 sm:w-10 bg-orange-500 rounded-t-lg" style={{ height: `${Math.max(20, s.total / 20)}px` }}></div>
-                  <div className="text-xs text-gray-300 mt-1">{s.date.slice(5)}</div>
-                </div>
-              ))
-            )}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
+            <span className="text-orange-400 text-lg font-bold">
+              Sales Trend ({trendView === 'monthly' ? `${monthName} ${selectedYear}` : `${selectedYear}`})
+            </span>
+            <div className="flex gap-2 items-center">
+              {/* Trend view toggle */}
+              <label className="flex items-center gap-1 cursor-pointer">
+                <input
+                  type="radio"
+                  name="trendView"
+                  value="monthly"
+                  checked={trendView === 'monthly'}
+                  onChange={() => setTrendView('monthly')}
+                  className="appearance-none w-4 h-4 rounded-full border border-white bg-[#181c23] checked:bg-orange-500 checked:border-white focus:outline-none focus:ring-2 focus:ring-orange-400"
+                />
+                <span className="text-white text-sm">Monthly</span>
+              </label>
+              <label className="flex items-center gap-1 cursor-pointer">
+                <input
+                  type="radio"
+                  name="trendView"
+                  value="yearly"
+                  checked={trendView === 'yearly'}
+                  onChange={() => setTrendView('yearly')}
+                  className="appearance-none w-4 h-4 rounded-full border border-white bg-[#181c23] checked:bg-orange-500 checked:border-white focus:outline-none focus:ring-2 focus:ring-orange-400"
+                />
+                <span className="text-white text-sm">Yearly</span>
+              </label>
+              <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))} className={`border border-white rounded px-2 py-1 bg-[#181c23] text-white focus:outline-none focus:ring-2 focus:ring-orange-400 ${trendView === 'yearly' ? 'hidden' : ''}`}>
+                {[...Array(12)].map((_, i) => (
+                  <option key={i+1} value={i+1}>{new Date(0, i).toLocaleString('default', { month: 'long' })}</option>
+                ))}
+              </select>
+              <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))} className="border border-white rounded px-2 py-1 bg-[#181c23] text-white focus:outline-none focus:ring-2 focus:ring-orange-400">
+                {[...Array(6)].map((_, i) => (
+                  <option key={now.getFullYear() - i} value={now.getFullYear() - i}>{now.getFullYear() - i}</option>
+                ))}
+              </select>
+            </div>
           </div>
+          <ResponsiveContainer width="100%" height={220}>
+            <LineChart data={salesTrendData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+              <XAxis dataKey="date" stroke="#ff9900" tick={{ fill: '#ff9900', fontWeight: 'bold' }} />
+              <YAxis stroke="#ff9900" tick={{ fill: '#ff9900' }} />
+              <Tooltip contentStyle={{ background: '#222', color: '#ff9900' }} formatter={(value) => `$${value}`}/>
+              <Line type="monotone" dataKey="total" stroke="#ff6600" strokeWidth={3} dot={false} />
+              <Scatter data={salesTrendData} fill="#ff6600" line={false} shape="circle" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>

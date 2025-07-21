@@ -8,6 +8,9 @@ class Sale {
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
         total DECIMAL(10,2) NOT NULL,
+        customer_name VARCHAR(255),
+        customer_email VARCHAR(255),
+        customer_number VARCHAR(50),
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       )
     `;
@@ -15,13 +18,13 @@ class Sale {
   }
 
   // Create a new sale
-  static async create({ user_id, total }) {
+  static async create({ user_id, total, customer_name = null, customer_email = null, customer_number = null }) {
     const query = `
-      INSERT INTO sales (user_id, total)
-      VALUES ($1, $2)
+      INSERT INTO sales (user_id, total, customer_name, customer_email, customer_number)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     `;
-    return await executeQuery(query, [user_id, total]);
+    return await executeQuery(query, [user_id, total, customer_name, customer_email, customer_number]);
   }
 
   // Get all sales

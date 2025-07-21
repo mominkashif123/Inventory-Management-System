@@ -2,6 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const AuditLog = require('../models/AuditLog');
+const JWT_SECRET = 'your-secret-key';
 
 class UserController {
   // Register new user
@@ -43,7 +44,7 @@ class UserController {
         return res.status(401).json({ success: false, error: 'Invalid credentials' });
       }
       // Issue JWT
-      const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '8h' });
+      const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '8h' });
       await AuditLog.log({ user_id: user.id, action: 'login_success', details: JSON.stringify({ username }) });
       res.json({ success: true, token, data: { id: user.id, username: user.username, role: user.role } });
     } catch (error) {
@@ -104,7 +105,7 @@ const authMiddleware = (roles = []) => {
     }
     const token = authHeader.split(' ')[1];
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, JWT_SECRET);
       req.user = decoded;
       if (roles.length && !roles.includes(decoded.role)) {
         return res.status(403).json({ success: false, error: 'Forbidden: insufficient role' });
