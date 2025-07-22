@@ -29,9 +29,9 @@ export default function LoginPage() {
       } else {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.data));
-        navigate('/products');
+        navigate('/dashboard');
       }
-    } catch (err) {
+    } catch (err) { 
       setError('Login failed. Please try again.');
       localStorage.removeItem('isLoggedIn');
     }

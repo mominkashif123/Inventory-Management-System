@@ -96,7 +96,7 @@ class UserController {
   }
 }
 
-// JWT auth middleware
+// JWT auth middleware 
 const authMiddleware = (roles = []) => {
   return (req, res, next) => {
     const authHeader = req.headers.authorization;

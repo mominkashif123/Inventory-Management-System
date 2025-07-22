@@ -48,4 +48,4 @@ class InventoryAdjustmentsController {
   }
 }
 
-module.exports = InventoryAdjustmentsController; 
+module.exports = InventoryAdjustmentsController;

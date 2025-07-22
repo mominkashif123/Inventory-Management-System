@@ -296,8 +296,7 @@ export default function DashboardPage() {
               <XAxis dataKey="date" stroke="#ff9900" tick={{ fill: '#ff9900', fontWeight: 'bold' }} />
               <YAxis stroke="#ff9900" tick={{ fill: '#ff9900' }} />
               <Tooltip contentStyle={{ background: '#222', color: '#ff9900' }} formatter={(value) => `$${value}`}/>
-              <Line type="monotone" dataKey="total" stroke="#ff6600" strokeWidth={3} dot={false} />
-              <Scatter data={salesTrendData} fill="#ff6600" line={false} shape="circle" />
+              <Line type="linear" dataKey="total" stroke="#ff6600" strokeWidth={3} dot={{ r: 5, fill: '#ff6600', stroke: '#fff', strokeWidth: 2 }} activeDot={{ r: 7 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
