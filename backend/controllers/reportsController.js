@@ -158,6 +158,14 @@ class ReportsController {
       doc.moveDown();
       sales.forEach((sale, idx) => {
         doc.fontSize(14).text(`Order #${sale.id} - Date: ${new Date(sale.created_at).toLocaleString()}`);
+        // Add customer info if present
+        if (sale.customer_name || sale.customer_email || sale.customer_number) {
+          let customerInfo = '';
+          if (sale.customer_name) customerInfo += `Customer: ${sale.customer_name}`;
+          if (sale.customer_email) customerInfo += `${customerInfo ? ' | ' : ''}Email: ${sale.customer_email}`;
+          if (sale.customer_number) customerInfo += `${customerInfo ? ' | ' : ''}Number: ${sale.customer_number}`;
+          doc.fontSize(12).text(customerInfo);
+        }
         doc.fontSize(12).text(`Total: $${sale.total}`);
         const items = itemsBySale[sale.id] || [];
         if (items.length > 0) {

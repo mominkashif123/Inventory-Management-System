@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Package, LogIn, UserPlus, Menu, X, LogOut, BarChart2, ShoppingCart, ClipboardList, Settings } from 'lucide-react';
+import { Package, LogIn, UserPlus, Menu, X, LogOut, BarChart2, ShoppingCart, ClipboardList, Settings, Moon, Sun } from 'lucide-react';
+
+const getInitialTheme = () => {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const stored = window.localStorage.getItem('theme');
+    if (stored) return stored;
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+  }
+  return 'light';
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [theme, setTheme] = useState(getInitialTheme());
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -12,6 +22,11 @@ const Navbar = () => {
   const token = localStorage.getItem('token');
   const isLoggedIn = !!token && !!user;
   const role = user?.role;
+
+  React.useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -38,7 +53,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="sticky top-0 w-full z-50 bg-gradient-to-r from-orange-50 to-white/95 backdrop-blur-xl border-b border-orange-100 shadow-md">
+    <nav className="sticky top-0 w-full z-50 bg-gradient-to-r from-orange-50 to-white/95 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 dark:shadow-none backdrop-blur-xl border-b border-orange-100 shadow-md">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
         <div className="flex justify-between items-center py-4 gap-2">
           {/* Logo */}
@@ -46,7 +61,7 @@ const Navbar = () => {
             <div className="p-2 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl group-hover:rotate-12 transition-transform">
               <Package className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-orange-600 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-orange-600 bg-clip-text text-transparent dark:from-orange-100 dark:to-orange-400">
               THS Management System
             </span>
           </Link>
@@ -59,18 +74,26 @@ const Navbar = () => {
                 to={path}
                 className={`group flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ${
                   isActive(path)
-                    ? 'bg-orange-50 text-orange-600 shadow-sm border border-orange-100'
-                    : 'text-gray-600 hover:text-orange-600 hover:bg-orange-50'
+                    ? 'bg-orange-50 text-orange-600 shadow-sm border border-orange-100 dark:bg-gray-800 dark:text-orange-400 dark:border-gray-700'
+                    : 'text-gray-600 hover:text-orange-600 hover:bg-orange-50 dark:text-orange-200 dark:hover:text-orange-400 dark:hover:bg-gray-800'
                 }`}
               >
                 <Icon className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 <span className="font-medium">{label}</span>
               </Link>
             ))}
+            {/* Dark/Light Mode Toggle */}
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="ml-2 p-2 rounded-xl border border-orange-100 dark:border-gray-700 bg-white dark:bg-gray-800 text-orange-600 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-gray-700 transition"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
             {isLoggedIn && (
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-600 hover:text-orange-600 hover:bg-orange-50 transition-all duration-300"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-gray-600 hover:text-orange-600 hover:bg-orange-50 transition-all duration-300 dark:text-orange-200 dark:hover:text-orange-400 dark:hover:bg-gray-800"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="font-medium">Logout</span>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import authFetch from '../utils/authFetch';
+import Fuse from 'fuse.js';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -14,6 +15,7 @@ export default function ProductsPage() {
   const PRODUCTS_PER_PAGE = 50;
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+  const [selected, setSelected] = useState([]);
 
   useEffect(() => {
     authFetch('http://localhost:5000/api/products')
@@ -30,12 +32,13 @@ export default function ProductsPage() {
 
   useEffect(() => {
     let filtered = products;
+    // Fuzzy search using fuse.js
     if (searchTerm) {
-      filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (product.part_number && product.part_number.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
+      const fuse = new Fuse(products, {
+        keys: ['name', 'description', 'part_number'],
+        threshold: 0.4,
+      });
+      filtered = fuse.search(searchTerm).map(result => result.item);
     }
     if (filterType !== 'all') {
       filtered = filtered.filter(product => product.type === filterType);
@@ -66,11 +69,33 @@ export default function ProductsPage() {
     setProducts(products.filter(p => p.id !== id));
   };
 
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelected(paginatedProducts.map(p => p.id));
+    } else {
+      setSelected([]);
+    }
+  };
+
+  const handleSelect = (id) => {
+    setSelected(selected.includes(id) ? selected.filter(sid => sid !== id) : [...selected, id]);
+  };
+
+  const handleBulkDelete = async () => {
+    if (!selected.length) return;
+    if (!window.confirm(`Delete ${selected.length} selected products?`)) return;
+    for (const id of selected) {
+      await authFetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
+    }
+    setProducts(products.filter(p => !selected.includes(p.id)));
+    setSelected([]);
+  };
+
   if (loading) return <div className="text-center py-10">Loading...</div>;
   if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
 
   return (
-    <div className="pt-24 max-w-7xl mx-auto px-4">
+    <div className="pt-24 max-w-7xl mx-auto px-4 min-h-screen bg-gradient-to-br from-orange-50 to-white dark:from-gray-900 dark:to-gray-800">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <h2 className="text-2xl font-bold">Products</h2>
         <Link
@@ -123,9 +148,21 @@ export default function ProductsPage() {
         </select>
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded shadow">
+        <div className="flex items-center mb-2 gap-4">
+          <input type="checkbox" checked={selected.length === paginatedProducts.length && paginatedProducts.length > 0} onChange={handleSelectAll} />
+          <span className="text-sm">Select All</span>
+          <button
+            onClick={handleBulkDelete}
+            disabled={!selected.length}
+            className="bg-red-500 text-white px-4 py-2 rounded disabled:opacity-50 ml-4"
+          >
+            Delete Selected
+          </button>
+        </div>
+        <table className="min-w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded shadow">
           <thead className="bg-gray-100">
             <tr>
+              <th className="py-2 px-4 border-b"><input type="checkbox" checked={selected.length === paginatedProducts.length && paginatedProducts.length > 0} onChange={handleSelectAll} /></th>
               <th className="py-2 px-4 border-b">Name</th>
               <th className="py-2 px-4 border-b">Type</th>
               <th className="py-2 px-4 border-b">Location</th>
@@ -139,11 +176,12 @@ export default function ProductsPage() {
           <tbody>
             {paginatedProducts.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-8 text-gray-500">No products found.</td>
+                <td colSpan={9} className="text-center py-8 text-gray-500">No products found.</td>
               </tr>
             ) : (
               paginatedProducts.map(product => (
                 <tr key={product.id} className="hover:bg-gray-50">
+                  <td className="py-2 px-4 border-b"><input type="checkbox" checked={selected.includes(product.id)} onChange={() => handleSelect(product.id)} /></td>
                   <td className="py-2 px-4 border-b"><Link className="text-blue-600 hover:underline" to={`/products/${product.id}`}>{product.name}</Link></td>
                   <td className="py-2 px-4 border-b">
                     <span className={`inline-block px-3 py-1 text-xs font-semibold text-white rounded-full ${

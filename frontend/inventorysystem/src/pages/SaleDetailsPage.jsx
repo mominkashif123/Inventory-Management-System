@@ -73,6 +73,13 @@ export default function SaleDetailsPage() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
           <div>
             <div className="text-gray-700"><span className="font-medium">Date:</span> {new Date(sale.created_at).toLocaleString()}</div>
+            {sale.customer_name && (
+              <div className="text-gray-700">
+                <span className="font-medium">Customer:</span> {sale.customer_name}
+                {sale.customer_email && <> | <span className="font-medium">Email:</span> {sale.customer_email}</>}
+                {sale.customer_number && <> | <span className="font-medium">Number:</span> {sale.customer_number}</>}
+              </div>
+            )}
           </div>
           <div>
             <div className="text-gray-700"><span className="font-medium">Total:</span> <span className="text-lg font-bold text-orange-600">${sale.total}</span></div>

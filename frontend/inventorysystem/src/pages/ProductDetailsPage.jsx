@@ -40,7 +40,7 @@ export default function ProductDetailsPage() {
   if (!product) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white pt-24 pb-12">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white dark:from-gray-900 dark:to-gray-800 pt-24 pb-12">
       <div className="max-w-2xl mx-auto px-6">
         <div className="flex items-center gap-4 mb-8">
           <Link
@@ -54,7 +54,7 @@ export default function ProductDetailsPage() {
             <p className="text-gray-600">View inventory item information</p>
           </div>
         </div>
-        <div className="bg-white border border-orange-200 p-8 shadow-xl rounded-xl">
+        <div className="bg-white dark:bg-gray-900 border border-orange-200 dark:border-gray-700 p-8 shadow-xl rounded-xl">
           <div className="flex items-center gap-4 mb-8">
             <div className={`p-4 bg-gradient-to-r from-orange-400 to-orange-600 rounded-xl`}>
               <Package className="w-8 h-8 text-white" />

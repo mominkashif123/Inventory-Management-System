@@ -194,12 +194,16 @@ export default function CheckoutPage() {
                   <div className="text-xs text-gray-500">{product.description}</div>
                   <div className="text-xs text-gray-400">Part #: {product.part_number} | Type: {product.type} | Location: {product.location}</div>
                 </div>
-                <button
-                  onClick={() => addToCart(product)}
-                  className="bg-orange-500 text-white px-3 py-1 rounded hover:bg-orange-600"
-                >
-                  Add
-                </button>
+                {parseInt(product.quantity, 10) <= 0 ? (
+                  <span className="text-red-500 font-semibold text-sm">Out of Stock</span>
+                ) : (
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="bg-orange-500 text-white px-3 py-1 rounded hover:bg-orange-600"
+                  >
+                    Add
+                  </button>
+                )}
               </li>
             ))}
           </ul>

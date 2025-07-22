@@ -24,6 +24,9 @@ class SalesController {
           return res.status(400).json({ success: false, error: `Product not found: ${item.product_id}` });
         }
         const product = productResult.data[0];
+        if (Number(product.quantity) <= 0) {
+          return res.status(400).json({ success: false, error: `Product out of stock: ${product.name}` });
+        }
         if (Number(product.quantity) < Number(item.quantity)) {
           return res.status(400).json({ success: false, error: `Insufficient stock for product: ${product.name}` });
         }

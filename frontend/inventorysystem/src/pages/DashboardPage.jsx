@@ -107,7 +107,7 @@ export default function DashboardPage() {
       }));
 
   return (
-    <div className="pt-24 min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-black to-gray-800 text-orange-100 px-2 sm:px-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white dark:from-gray-900 dark:to-gray-800 pt-24 pb-12">
       <div className="flex-1 max-w-7xl mx-auto w-full flex flex-col">
         {/* Out of Stock Alert Section */}
         {lowStockCritical.length > 0 && (

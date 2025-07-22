@@ -10,6 +10,15 @@ class InventoryAdjustmentsController {
       if (!product_id || !user_id || !change) {
         return res.status(400).json({ success: false, error: 'Missing required fields' });
       }
+      // Check if adjustment would make quantity negative
+      const productResult = await Product.findById(product_id);
+      if (!productResult.success || productResult.rowCount === 0) {
+        return res.status(400).json({ success: false, error: 'Product not found' });
+      }
+      const currentQty = Number(productResult.data[0].quantity);
+      if (currentQty + Number(change) < 0) {
+        return res.status(400).json({ success: false, error: 'Adjustment would make quantity negative. Not allowed.' });
+      }
       // Update product quantity
       await Product.updateQuantity(product_id, change);
       // Log adjustment

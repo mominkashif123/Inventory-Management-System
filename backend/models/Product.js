@@ -65,6 +65,15 @@ class Product {
 
   // Update product quantity by delta
   static async updateQuantity(id, delta) {
+    // Get current quantity
+    const currentResult = await executeQuery('SELECT quantity FROM products WHERE id = $1', [id]);
+    if (!currentResult.success || currentResult.rowCount === 0) {
+      return { success: false, error: 'Product not found' };
+    }
+    const currentQty = Number(currentResult.data[0].quantity);
+    if (currentQty + delta < 0) {
+      return { success: false, error: 'Quantity cannot go below zero' };
+    }
     const query = `
       UPDATE products SET quantity = quantity + $1, updated_at = NOW() WHERE id = $2 RETURNING *
     `;
