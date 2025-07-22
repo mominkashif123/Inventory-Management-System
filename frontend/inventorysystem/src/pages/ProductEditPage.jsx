@@ -165,7 +165,7 @@ const ProductEditPage = () => {
                 <input
                   name="quantity"
                   type="number"
-                  step="0.001"
+                  step="1"
                   value={form.quantity}
                   onChange={handleChange}
                   className="bg-white border border-orange-200 focus:border-orange-500 focus:ring-orange-500/20 rounded px-3 py-2 w-full"
