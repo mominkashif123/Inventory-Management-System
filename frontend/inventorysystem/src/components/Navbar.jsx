@@ -33,7 +33,7 @@ const Navbar = () => {
     ] : []),
     ...(!isLoggedIn ? [
       { path: '/login', label: 'Login', icon: LogIn },
-      { path: '/register', label: 'Register', icon: UserPlus },
+      // { path: '/register', label: 'Register', icon: UserPlus },
     ] : []),
   ];
 
