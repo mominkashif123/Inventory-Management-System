@@ -26,6 +26,7 @@ export default function UsersPage() {
   const handleRoleChange = async (id, newRole) => {
     setSaving(true);
     try {
+      // const res = await authFetch(`http://localhost:5000/api/users/${id}/role`, {
       const res = await authFetch(`https://inventory-management-system-uyit.onrender.com/api/users/${id}/role`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -47,6 +48,7 @@ export default function UsersPage() {
     if (!window.confirm('Delete this user?')) return;
     setSaving(true);
     try {
+      // const res = await authFetch(`http://localhost:5000/api/users/${id}`, { method: 'DELETE' });
       const res = await authFetch(`https://inventory-management-system-uyit.onrender.com/api/users/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
@@ -69,6 +71,7 @@ export default function UsersPage() {
     setCreating(true);
     setError(null);
     try {
+      // const res = await authFetch('http://localhost:5000/api/users/register', {
       const res = await authFetch('https://inventory-management-system-uyit.onrender.com/api/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
