@@ -115,7 +115,7 @@ export default function SalesPage() {
     if (!selected.length) return;
     if (!window.confirm(`Delete ${selected.length} selected sales?`)) return;
     for (const id of selected) {
-      await authFetch(`http://localhost:5000/api/sales/${id}`, { method: 'DELETE' });
+      await authFetch(`https://inventory-management-system-uyit.onrender.com/api/sales/${id}`, { method: 'DELETE' });
     }
     setSales(sales.filter(s => !selected.includes(s.id)));
     setSelected([]);

@@ -27,9 +27,10 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    // Normalize origins by removing trailing slashes
+    // Define allowed origins
     const allowedOrigins = [
       'http://localhost:3000',
+      'http://localhost:3001',
       'https://theharleystore-ims.vercel.app',
       'https://theharleystore-ims.vercel.app/'
     ];
@@ -52,16 +53,37 @@ const corsOptions = {
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
+      console.log('Allowed origins:', allowedOrigins);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Length', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 200
 };
 
 // Middleware
 app.use(cors(corsOptions));
+
+// Additional CORS headers for preflight requests
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
+  next();
+});
+
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
@@ -75,7 +97,17 @@ app.use('/api/audit-logs', auditLogsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('Error:', err);
+  
+  // Handle CORS errors specifically
+  if (err.message === 'Not allowed by CORS') {
+    return res.status(403).json({
+      success: false,
+      error: 'CORS policy violation',
+      message: 'Origin not allowed'
+    });
+  }
+  
   res.status(500).json({
     success: false,
     error: 'Something went wrong!',
@@ -95,7 +127,7 @@ app.use('*', (req, res) => {
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`🔗 CORS Origins: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`);
-  // console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   // console.log(`🔗 API URL: http://localhost:${PORT}`);
   // console.log(`🗄️ Database: PostgreSQL (Session Pooler)`);
   // console.log(`📦 Products API: http://localhost:${PORT}/api/products`);
