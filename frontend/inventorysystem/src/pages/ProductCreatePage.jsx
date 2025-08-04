@@ -31,7 +31,8 @@ const ProductCreatePage = () => {
       return;
     }
     try {
-      const res = await authFetch('http://localhost:5000/api/products', {
+      // const res = await authFetch('http://localhost:5000/api/products', {
+      const res = await authFetch('https://inventory-management-system-uyit.onrender.com/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

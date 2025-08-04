@@ -12,7 +12,8 @@ const ProductEditPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    authFetch(`http://localhost:5000/api/products/${id}`)
+    // authFetch(`http://localhost:5000/api/products/${id}`)
+    authFetch(`https://inventory-management-system-uyit.onrender.com/api/products/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -50,7 +51,8 @@ const ProductEditPage = () => {
       return;
     }
     try {
-      const res = await authFetch(`http://localhost:5000/api/products/${id}`, {
+      // const res = await authFetch(`http://localhost:5000/api/products/${id}`, {
+      const res = await authFetch(`https://inventory-management-system-uyit.onrender.com/api/products/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

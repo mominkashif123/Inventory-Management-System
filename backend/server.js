@@ -16,17 +16,17 @@ const User = require('./models/User');
 const Sale = require('./models/Sale');
 const SaleItem = require('./models/SaleItem');
 const InventoryAdjustment = require('./models/InventoryAdjustment');
-const AuditLog = require('./models/AuditLog');
-
+const AuditLog = require('./models/AuditLog'); 
+ 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000', 
   credentials: true
 }));
-app.use(express.json());
+app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
 // API Routes

@@ -24,7 +24,8 @@ export default function CheckoutPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    authFetch('http://localhost:5000/api/products')
+    // authFetch('http://localhost:5000/api/products')
+    authFetch('https://inventory-management-system-uyit.onrender.com/api/products')
       .then(res => res.json())
       .then(res => {
         setProducts(res.data || []);
@@ -95,7 +96,8 @@ export default function CheckoutPage() {
     setSaving(true);
     try {
       // For now, user_id is null (add real user logic as needed)
-      const res = await authFetch('http://localhost:5000/api/sales', {
+      // const res = await authFetch('http://localhost:5000/api/sales', {
+      const res = await authFetch('https://inventory-management-system-uyit.onrender.com/api/sales', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

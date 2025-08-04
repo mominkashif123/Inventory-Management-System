@@ -14,7 +14,8 @@ export default function SaleDetailsPage() {
   // --- PDF Download Handler ---
   const handleDownloadPdf = async () => {
     const month = pdfMonth;
-    const res = await fetch(`http://localhost:5000/api/reports/monthly-orders/pdf?month=${month}`, {
+    // const res = await fetch(`http://localhost:5000/api/reports/monthly-orders/pdf?month=${month}`, {
+    const res = await fetch(`https://inventory-management-system-uyit.onrender.com/api/reports/monthly-orders/pdf?month=${month}`, {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
     if (!res.ok) {
@@ -26,7 +27,8 @@ export default function SaleDetailsPage() {
   };
 
   useEffect(() => {
-    authFetch(`http://localhost:5000/api/sales/${id}`)
+    // authFetch(`http://localhost:5000/api/sales/${id}`)
+    authFetch(`https://inventory-management-system-uyit.onrender.com/api/sales/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {

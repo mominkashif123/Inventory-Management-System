@@ -16,7 +16,8 @@ export default function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/users/login', {
+      // const res = await fetch('http://localhost:5000/api/users/login', {
+      const res = await fetch('https://inventory-management-system-uyit.onrender.com/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: form.username, password: form.password })

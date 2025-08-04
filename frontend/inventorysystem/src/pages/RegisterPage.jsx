@@ -22,7 +22,7 @@ export default function RegisterPage() {
       return;
     }
     try {
-      const res = await authFetch('http://localhost:5000/api/users/register', {
+      const res = await authFetch('https://inventory-management-system-uyit.onrender.com/api/users/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: form.username, password: form.password })

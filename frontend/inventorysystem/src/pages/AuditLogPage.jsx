@@ -7,7 +7,8 @@ export default function AuditLogPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    authFetch('http://localhost:5000/api/audit-logs')
+    // authFetch('http://localhost:5000/api/audit-logs')
+    authFetch('https://inventory-management-system-uyit.onrender.com/api/audit-logs')
       .then(res => res.json())
       .then(res => {
         setLogs(res.data || []);

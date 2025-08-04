@@ -10,7 +10,8 @@ export default function InventoryAdjustmentsPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    authFetch('http://localhost:5000/api/inventory-adjustments')
+    // authFetch('http://localhost:5000/api/inventory-adjustments')
+    authFetch('https://inventory-management-system-uyit.onrender.com/api/inventory-adjustments')
       .then(res => res.json())
       .then(res => {
         setAdjustments(res.data || []);
@@ -20,7 +21,8 @@ export default function InventoryAdjustmentsPage() {
         setError('Failed to load adjustments');
         setLoading(false);
       });
-    authFetch('http://localhost:5000/api/products')
+    // authFetch('http://localhost:5000/api/products')
+    authFetch('https://inventory-management-system-uyit.onrender.com/api/products')
       .then(res => res.json())
       .then(res => setProducts(res.data || []));
   }, []);
@@ -35,7 +37,8 @@ export default function InventoryAdjustmentsPage() {
     setError(null);
     try {
       // For now, user_id is null (add real user logic as needed)
-      const res = await authFetch('http://localhost:5000/api/inventory-adjustments', {
+      // const res = await authFetch('http://localhost:5000/api/inventory-adjustments', {
+      const res = await authFetch('https://inventory-management-system-uyit.onrender.com/api/inventory-adjustments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, user_id: null, change: parseInt(form.change) })

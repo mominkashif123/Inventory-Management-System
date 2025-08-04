@@ -17,7 +17,7 @@ export default function SalesPage() {
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
-    authFetch('http://localhost:5000/api/sales')
+    authFetch('https://inventory-management-system-uyit.onrender.com/api/sales')
       .then(res => res.json())
       .then(res => {
         setSales(res.data || []);
@@ -31,7 +31,7 @@ export default function SalesPage() {
 
   const handleDownloadPdf = async () => {
     const month = pdfMonth;
-    const res = await fetch(`http://localhost:5000/api/reports/monthly-orders/pdf?month=${month}`, {
+    const res = await fetch(`https://inventory-management-system-uyit.onrender.com/api/reports/monthly-orders/pdf?month=${month}`, {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     });
     if (!res.ok) {

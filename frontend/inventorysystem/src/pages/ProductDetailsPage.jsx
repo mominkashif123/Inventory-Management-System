@@ -10,7 +10,8 @@ export default function ProductDetailsPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    authFetch(`http://localhost:5000/api/products/${id}`)
+    // authFetch(`http://localhost:5000/api/products/${id}`)
+    authFetch(`https://inventory-management-system-uyit.onrender.com/api/products/${id}`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {

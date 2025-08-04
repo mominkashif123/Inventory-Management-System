@@ -47,17 +47,24 @@ export default function DashboardPage() {
     setLoading(true);
     let trendUrl = '';
     if (trendView === 'monthly') {
-      trendUrl = `http://localhost:5000/api/reports/recent-sales?month=${selectedMonth}&year=${selectedYear}`;
+      // trendUrl = `http://localhost:5000/api/reports/recent-sales?month=${selectedMonth}&year=${selectedYear}`;
+      trendUrl = `https://inventory-management-system-uyit.onrender.com/api/reports/recent-sales?month=${selectedMonth}&year=${selectedYear}`;
     } else {
-      trendUrl = `http://localhost:5000/api/reports/recent-sales?year=${selectedYear}&view=yearly`;
+      // trendUrl = `http://localhost:5000/api/reports/recent-sales?year=${selectedYear}&view=yearly`;
+      trendUrl = `https://inventory-management-system-uyit.onrender.com/api/reports/recent-sales?year=${selectedYear}&view=yearly`;
     }
     Promise.all([
-      authFetch('http://localhost:5000/api/reports/sales-summary').then(res => res.json()),
-      authFetch('http://localhost:5000/api/reports/inventory-value').then(res => res.json()),
-      authFetch('http://localhost:5000/api/reports/bestsellers').then(res => res.json()),
-      authFetch('http://localhost:5000/api/reports/low-stock').then(res => res.json()),
+      // authFetch('http://localhost:5000/api/reports/sales-summary').then(res => res.json()),
+      authFetch('https://inventory-management-system-uyit.onrender.com/api/reports/sales-summary').then(res => res.json()),
+      // authFetch('http://localhost:5000/api/reports/inventory-value').then(res => res.json()),
+      authFetch('https://inventory-management-system-uyit.onrender.com/api/reports/inventory-value').then(res => res.json()),
+      // authFetch('http://localhost:5000/api/reports/bestsellers').then(res => res.json()),
+      authFetch('https://inventory-management-system-uyit.onrender.com/api/reports/bestsellers').then(res => res.json()),
+      // authFetch('http://localhost:5000/api/reports/low-stock').then(res => res.json()),
+      authFetch('https://inventory-management-system-uyit.onrender.com/api/reports/low-stock').then(res => res.json()),
       authFetch(trendUrl).then(res => res.json()),
-      authFetch('http://localhost:5000/api/reports/recent-sales?last7=true').then(res => res.json())
+      // authFetch('http://localhost:5000/api/reports/recent-sales?last7=true').then(res => res.json())
+      authFetch('https://inventory-management-system-uyit.onrender.com/api/reports/recent-sales?last7=true').then(res => res.json())
     ]).then(([summaryRes, valueRes, bestsellersRes, lowStockRes, recentSalesRes, last7Res]) => {
       setSummary(summaryRes.data);
       setInventoryValue(valueRes.data);
@@ -81,7 +88,8 @@ export default function DashboardPage() {
     e.preventDefault();
     if (!selectedProduct) return;
     const { id, name, quantity, value, description, part_number, type, location } = selectedProduct;
-    await authFetch(`http://localhost:5000/api/products/${id}`, {
+    // await authFetch(`http://localhost:5000/api/products/${id}`, {
+    await authFetch(`https://inventory-management-system-uyit.onrender.com/api/products/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, quantity, value, description, part_number, type, location })

@@ -18,7 +18,8 @@ export default function ProductsPage() {
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
-    authFetch('http://localhost:5000/api/products')
+    // authFetch('http://localhost:5000/api/products')
+    authFetch('https://inventory-management-system-uyit.onrender.com/api/products')
       .then(res => res.json())
       .then(res => {
         setProducts(res.data || []);
@@ -65,7 +66,8 @@ export default function ProductsPage() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this product?')) return;
-    await authFetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
+    // await authFetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
+    await authFetch(`https://inventory-management-system-uyit.onrender.com/api/products/${id}`, { method: 'DELETE' });
     setProducts(products.filter(p => p.id !== id));
   };
 
@@ -85,7 +87,8 @@ export default function ProductsPage() {
     if (!selected.length) return;
     if (!window.confirm(`Delete ${selected.length} selected products?`)) return;
     for (const id of selected) {
-      await authFetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
+      // await authFetch(`http://localhost:5000/api/products/${id}`, { method: 'DELETE' });
+      await authFetch(`https://inventory-management-system-uyit.onrender.com/api/products/${id}`, { method: 'DELETE' });
     }
     setProducts(products.filter(p => !selected.includes(p.id)));
     setSelected([]);
