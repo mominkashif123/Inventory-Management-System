@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Package, LogIn, UserPlus, Menu, X, LogOut, BarChart2, ShoppingCart, ClipboardList, Settings, Moon, Sun } from 'lucide-react';
+import { Package, LogIn, UserPlus, Menu, X, LogOut, BarChart2, ShoppingCart, ClipboardList, Moon, Sun } from 'lucide-react';
 
 const getInitialTheme = () => {
   if (typeof window !== 'undefined' && window.localStorage) {

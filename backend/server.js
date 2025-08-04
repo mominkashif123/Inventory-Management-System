@@ -58,11 +58,11 @@ app.use('*', (req, res) => {
 // Start server
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 API URL: http://localhost:${PORT}`);
-  console.log(`🗄️ Database: PostgreSQL (Session Pooler)`);
-  console.log(`📦 Products API: http://localhost:${PORT}/api/products`);
-  console.log(`👤 Users API: http://localhost:${PORT}/api/users`);
+  // console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  // console.log(`🔗 API URL: http://localhost:${PORT}`);
+  // console.log(`🗄️ Database: PostgreSQL (Session Pooler)`);
+  // console.log(`📦 Products API: http://localhost:${PORT}/api/products`);
+  // console.log(`👤 Users API: http://localhost:${PORT}/api/users`);
   
   // Create tables if not exist
   await Product.createTable();

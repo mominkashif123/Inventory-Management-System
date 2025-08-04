@@ -97,7 +97,7 @@ export default function ProductsPage() {
   return (
     <div className="pt-24 max-w-7xl mx-auto px-4 min-h-screen bg-gradient-to-br from-orange-50 to-white dark:from-gray-900 dark:to-gray-800">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <h2 className="text-2xl font-bold">Products</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Products</h2>
         <Link
           to="/products/new"
           className="bg-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow hover:bg-orange-600 transition text-center md:ml-auto"

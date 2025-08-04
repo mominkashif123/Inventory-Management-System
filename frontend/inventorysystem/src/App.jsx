@@ -11,7 +11,6 @@ import DashboardPage from "./pages/DashboardPage";
 import SalesPage from "./pages/SalesPage";
 import SaleDetailsPage from "./pages/SaleDetailsPage";
 import CheckoutPage from "./pages/CheckoutPage";
-import InventoryAdjustmentsPage from "./pages/InventoryAdjustmentsPage";
 import UsersPage from "./pages/UsersPage";
 import AuditLogPage from "./pages/AuditLogPage";
 

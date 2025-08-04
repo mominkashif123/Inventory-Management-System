@@ -39,30 +39,30 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-white">
-      <div className="bg-white border border-orange-200 p-8 rounded-xl shadow-xl w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">Login</h1>
-        {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-4">{error}</div>}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <div className="bg-white dark:bg-gray-800 border border-orange-200 dark:border-gray-600 p-8 rounded-xl shadow-xl w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">Login</h1>
+        {error && <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded-xl mb-4">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-gray-700 font-medium mb-2">Username</label>
+            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">Username</label>
             <input
               name="username"
               value={form.username}
               onChange={handleChange}
-              className="bg-white border border-orange-200 rounded px-3 py-2 w-full focus:border-orange-500 focus:ring-orange-500/20"
+              className="bg-white dark:bg-gray-700 border border-orange-200 dark:border-gray-600 rounded px-3 py-2 w-full focus:border-orange-500 focus:ring-orange-500/20 dark:text-white dark:placeholder-gray-400"
               placeholder="Enter your username"
               required
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-medium mb-2">Password</label>
+            <label className="block text-gray-700 dark:text-gray-300 font-medium mb-2">Password</label>
             <input
               name="password"
               type="password"
               value={form.password}
               onChange={handleChange}
-              className="bg-white border border-orange-200 rounded px-3 py-2 w-full focus:border-orange-500 focus:ring-orange-500/20"
+              className="bg-white dark:bg-gray-700 border border-orange-200 dark:border-gray-600 rounded px-3 py-2 w-full focus:border-orange-500 focus:ring-orange-500/20 dark:text-white dark:placeholder-gray-400"
               placeholder="Enter your password"
               required
             />
@@ -76,8 +76,8 @@ export default function LoginPage() {
           </button>
         </form>
         <div className="mt-6 text-center">
-          <span className="text-gray-600">Don't have an account? </span>
-          <Link to="/register" className="text-orange-600 hover:underline">Register</Link>
+          <span className="text-gray-600 dark:text-gray-400">Don't have an account? </span>
+          <Link to="/register" className="text-orange-600 dark:text-orange-400 hover:underline">Register</Link>
         </div>
       </div>
     </div>

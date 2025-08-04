@@ -140,36 +140,36 @@ export default function CheckoutPage() {
 
   return (
     <div className="pt-24 max-w-4xl mx-auto px-2 sm:px-4">
-      <h2 className="text-2xl font-bold mb-6">Checkout / New Sale</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Checkout / New Sale</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <h3 className="font-semibold mb-2">Products</h3>
+          <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Products</h3>
           <div className="flex gap-2 mb-4 flex-wrap">
             <input
               type="text"
               placeholder="Search products..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-orange-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full px-4 py-2 border border-orange-200 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             />
             <input
               type="number"
               placeholder="Min Price"
               value={minPrice}
               onChange={e => setMinPrice(e.target.value)}
-              className="w-32 px-4 py-2 border border-orange-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-32 px-4 py-2 border border-orange-200 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             />
             <input
               type="number"
               placeholder="Max Price"
               value={maxPrice}
               onChange={e => setMaxPrice(e.target.value)}
-              className="w-32 px-4 py-2 border border-orange-200 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-32 px-4 py-2 border border-orange-200 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             />
             <select
               value={filterType}
               onChange={e => setFilterType(e.target.value)}
-              className="px-4 py-2 border border-orange-200 rounded"
+              className="px-4 py-2 border border-orange-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="all">All Types</option>
               <option value="accessories">Accessories</option>
@@ -179,23 +179,23 @@ export default function CheckoutPage() {
             <select
               value={filterLocation}
               onChange={e => setFilterLocation(e.target.value)}
-              className="px-4 py-2 border border-orange-200 rounded"
+              className="px-4 py-2 border border-orange-200 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="all">All Locations</option>
               <option value="warehouse">Warehouse</option>
               <option value="store">Store</option>
             </select>
           </div>
-          <ul className="divide-y divide-orange-100">
+          <ul className="divide-y divide-orange-100 dark:divide-gray-700">
             {filteredProducts.map(product => (
               <li key={product.id} className="flex flex-col md:flex-row md:items-center md:justify-between py-2 gap-2">
                 <div>
-                  <div className="font-semibold">{product.name} (${product.value}) <span className="text-xs text-gray-500 ml-2">Qty: {parseInt(product.quantity, 10)}</span></div>
-                  <div className="text-xs text-gray-500">{product.description}</div>
-                  <div className="text-xs text-gray-400">Part #: {product.part_number} | Type: {product.type} | Location: {product.location}</div>
+                  <div className="font-semibold text-gray-900 dark:text-white">{product.name} (${product.value}) <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">Qty: {parseInt(product.quantity, 10)}</span></div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">{product.description}</div>
+                  <div className="text-xs text-gray-400 dark:text-gray-500">Part #: {product.part_number} | Type: {product.type} | Location: {product.location}</div>
                 </div>
                 {parseInt(product.quantity, 10) <= 0 ? (
-                  <span className="text-red-500 font-semibold text-sm">Out of Stock</span>
+                  <span className="text-red-500 dark:text-red-400 font-semibold text-sm">Out of Stock</span>
                 ) : (
                   <button
                     onClick={() => addToCart(product)}
@@ -209,54 +209,54 @@ export default function CheckoutPage() {
           </ul>
         </div>
         <div>
-          <h3 className="font-semibold mb-2">Cart</h3>
+          <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Cart</h3>
           {/* Customer Info Fields */}
-          <div className="mb-4 bg-orange-50 border border-orange-200 rounded-xl p-4 flex flex-col gap-3">
-            <h4 className="font-semibold text-orange-700 mb-2">Customer Information</h4>
+          <div className="mb-4 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-xl p-4 flex flex-col gap-3">
+            <h4 className="font-semibold text-orange-700 dark:text-orange-300 mb-2">Customer Information</h4>
             <input
               type="text"
               placeholder="Customer Name"
               value={customerName}
               onChange={e => setCustomerName(e.target.value)}
-              className="border border-orange-200 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="border border-orange-200 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             />
             <input
               type="email"
               placeholder="Customer Email"
               value={customerEmail}
               onChange={e => setCustomerEmail(e.target.value)}
-              className="border border-orange-200 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="border border-orange-200 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             />
             <input
               type="tel"
               placeholder="Customer Number"
               value={customerNumber}
               onChange={e => setCustomerNumber(e.target.value)}
-              className="border border-orange-200 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="border border-orange-200 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             />
           </div>
           {cart.length === 0 ? (
-            <div className="text-gray-500">No items in cart.</div>
+            <div className="text-gray-500 dark:text-gray-400">No items in cart.</div>
           ) : (
             <ul className="flex flex-col gap-4 mb-4">
               {cart.map(item => (
-                <li key={item.product_id} className="bg-white rounded-xl shadow border border-orange-100 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <li key={item.product_id} className="bg-white dark:bg-gray-800 rounded-xl shadow border border-orange-100 dark:border-gray-700 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div className="flex-1">
-                    <div className="font-semibold text-gray-900">{item.name} <span className="text-gray-500">(${item.price})</span></div>
+                    <div className="font-semibold text-gray-900 dark:text-white">{item.name} <span className="text-gray-500 dark:text-gray-400">(${item.price})</span></div>
                     <div className="flex flex-wrap gap-2 mt-2 items-center">
-                      <label className="text-xs font-medium">Qty:</label>
+                      <label className="text-xs font-medium text-gray-700 dark:text-gray-300">Qty:</label>
                       <input
                         type="number"
                         min="1"
                         value={item.quantity}
                         onChange={e => updateQuantity(item.product_id, parseInt(e.target.value))}
-                        className="w-16 border border-orange-200 rounded px-2 py-1"
+                        className="w-16 border border-orange-200 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       />
-                      <label className="text-xs font-medium ml-4">Item Discount:</label>
+                      <label className="text-xs font-medium ml-4 text-gray-700 dark:text-gray-300">Item Discount:</label>
                       <select
                         value={(itemDiscounts[item.product_id]?.type) || 'percent'}
                         onChange={e => setItemDiscounts(d => ({ ...d, [item.product_id]: { ...d[item.product_id], type: e.target.value } }))}
-                        className="border border-orange-200 rounded px-2 py-1"
+                        className="border border-orange-200 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       >
                         <option value="percent">%</option>
                         <option value="fixed">$</option>
@@ -266,28 +266,28 @@ export default function CheckoutPage() {
                         min="0"
                         value={(itemDiscounts[item.product_id]?.value) || ''}
                         onChange={e => setItemDiscounts(d => ({ ...d, [item.product_id]: { ...d[item.product_id], value: e.target.value, type: (d[item.product_id]?.type) || 'percent' } }))}
-                        className="w-20 border border-orange-200 rounded px-2 py-1"
+                        className="w-20 border border-orange-200 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                         placeholder={itemDiscounts[item.product_id]?.type === 'fixed' ? 'USD' : '%'}
                       />
-                      <span className="text-xs text-gray-500">{itemDiscounts[item.product_id]?.type === 'fixed' ? 'USD off' : '% off'}</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{itemDiscounts[item.product_id]?.type === 'fixed' ? 'USD off' : '% off'}</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <div className="text-sm text-gray-700">Subtotal: <span className="font-semibold">${(item.price * item.quantity).toFixed(2)}</span></div>
-                    <div className="text-sm text-green-700 font-bold">After Discount: ${getItemDiscountedPrice(item).toFixed(2)}</div>
+                    <div className="text-sm text-gray-700 dark:text-gray-300">Subtotal: <span className="font-semibold">${(item.price * item.quantity).toFixed(2)}</span></div>
+                    <div className="text-sm text-green-700 dark:text-green-400 font-bold">After Discount: ${getItemDiscountedPrice(item).toFixed(2)}</div>
                     <button
                       onClick={() => removeFromCart(item.product_id)}
-                      className="text-red-500 hover:underline text-xs mt-2"
+                      className="text-red-500 dark:text-red-400 hover:underline text-xs mt-2"
                     >Remove</button>
                   </div>
                 </li>
               ))}
             </ul>
           )}
-          <div className="font-bold mb-2">Total: ${cartTotal.toFixed(2)}</div>
+          <div className="font-bold mb-2 text-gray-900 dark:text-white">Total: ${cartTotal.toFixed(2)}</div>
           <div className="mb-2 flex gap-2 items-center">
-            <label className="font-medium">Discount:</label>
-            <select value={discountType} onChange={e => setDiscountType(e.target.value)} className="border border-orange-200 rounded px-2 py-1">
+            <label className="font-medium text-gray-700 dark:text-gray-300">Discount:</label>
+            <select value={discountType} onChange={e => setDiscountType(e.target.value)} className="border border-orange-200 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
               <option value="percent">%</option>
               <option value="fixed">$</option>
             </select>
@@ -296,20 +296,20 @@ export default function CheckoutPage() {
               min="0"
               value={discountValue}
               onChange={e => setDiscountValue(e.target.value)}
-              className="w-24 border border-orange-200 rounded px-2 py-1"
+              className="w-24 border border-orange-200 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               placeholder={discountType === 'percent' ? 'Percent' : 'Amount'}
             />
-            <span className="text-gray-500 text-sm">{discountType === 'percent' ? '% off' : 'USD off'}</span>
+            <span className="text-gray-500 dark:text-gray-400 text-sm">{discountType === 'percent' ? '% off' : 'USD off'}</span>
           </div>
-          <div className="mb-2 font-semibold text-orange-700">Total after discount: ${discountedTotal.toFixed(2)}</div>
-          <div className="mb-2 font-semibold text-green-700">Total in PKR: {totalPKR.toLocaleString(undefined, { maximumFractionDigits: 0 })} PKR</div>
-          <div className="mb-4 text-xs text-gray-500">Exchange Rate: 1 USD = {usdToPkr} PKR</div>
+          <div className="mb-2 font-semibold text-orange-700 dark:text-orange-400">Total after discount: ${discountedTotal.toFixed(2)}</div>
+          <div className="mb-2 font-semibold text-green-700 dark:text-green-400">Total in PKR: {totalPKR.toLocaleString(undefined, { maximumFractionDigits: 0 })} PKR</div>
+          <div className="mb-4 text-xs text-gray-500 dark:text-gray-400">Exchange Rate: 1 USD = {usdToPkr} PKR</div>
           <div className="mb-4">
-            <label className="block font-medium mb-1">Payment Method</label>
+            <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">Payment Method</label>
             <select
               value={paymentMethod}
               onChange={e => setPaymentMethod(e.target.value)}
-              className="w-full border border-orange-200 rounded px-3 py-2"
+              className="w-full border border-orange-200 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             >
               <option value="cash">Cash</option>
               <option value="card">Card</option>

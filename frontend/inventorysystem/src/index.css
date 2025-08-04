@@ -9,9 +9,77 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Global dark mode text color fixes */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  @apply text-gray-100;
+}
+
+.dark p, .dark span, .dark div {
+  @apply text-gray-100;
+}
+
+.dark label {
+  @apply text-gray-200;
+}
+
+/* Form elements in dark mode */
+.dark input, .dark textarea, .dark select {
+  @apply bg-gray-800 text-gray-100 border-gray-600 placeholder-gray-400;
+}
+
+.dark input:focus, .dark textarea:focus, .dark select:focus {
+  @apply border-orange-500 ring-orange-500 ring-opacity-50;
+}
+
+.dark input::placeholder, .dark textarea::placeholder {
+  @apply text-gray-400;
+}
+
+.dark table {
+  @apply text-gray-100;
+}
+
+.dark th {
+  @apply text-gray-200 bg-gray-800;
+}
+
+.dark td {
+  @apply text-gray-100 bg-gray-800 border-gray-700;
+}
+
+/* Chart text colors for dark mode */
+.dark .recharts-text {
+  @apply fill-gray-100;
+}
+
+.dark .recharts-cartesian-axis-tick-value {
+  @apply fill-gray-300;
+}
+
+.dark .recharts-legend-item-text {
+  @apply fill-gray-100;
+}
+
+.dark .recharts-tooltip-wrapper {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .recharts-tooltip-content {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .recharts-tooltip-label {
+  @apply text-gray-100;
+}
+
+.dark .recharts-tooltip-item {
+  @apply text-gray-200;
 }

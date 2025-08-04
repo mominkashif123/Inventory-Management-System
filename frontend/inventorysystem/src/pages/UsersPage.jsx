@@ -91,36 +91,36 @@ export default function UsersPage() {
 
   return (
     <div className="pt-24 max-w-3xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-6">User Management</h2>
-      <form onSubmit={handleCreate} className="mb-8 flex flex-col md:flex-row gap-4 items-end bg-white border border-orange-200 rounded-xl p-4 shadow">
+      <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">User Management</h2>
+      <form onSubmit={handleCreate} className="mb-8 flex flex-col md:flex-row gap-4 items-end bg-white dark:bg-gray-800 border border-orange-200 dark:border-gray-600 rounded-xl p-4 shadow">
         <div className="flex-1">
-          <label className="block font-medium mb-1">Username</label>
+          <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">Username</label>
           <input
             name="username"
             value={form.username}
             onChange={handleFormChange}
-            className="w-full border border-orange-200 rounded px-3 py-2"
+            className="w-full border border-orange-200 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             required
           />
         </div>
         <div className="flex-1">
-          <label className="block font-medium mb-1">Password</label>
+          <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">Password</label>
           <input
             name="password"
             type="password"
             value={form.password}
             onChange={handleFormChange}
-            className="w-full border border-orange-200 rounded px-3 py-2"
+            className="w-full border border-orange-200 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             required
           />
         </div>
         <div>
-          <label className="block font-medium mb-1">Role</label>
+          <label className="block font-medium mb-1 text-gray-700 dark:text-gray-300">Role</label>
           <select
             name="role"
             value={form.role}
             onChange={handleFormChange}
-            className="border border-orange-200 rounded px-2 py-2"
+            className="border border-orange-200 dark:border-gray-600 rounded px-2 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value="admin">Admin</option>
             <option value="manager">Manager</option>
@@ -135,39 +135,39 @@ export default function UsersPage() {
           {creating ? 'Creating...' : 'Add User'}
         </button>
       </form>
-      <table className="min-w-full bg-white border border-gray-200 rounded shadow">
-        <thead className="bg-gray-100">
+      <table className="min-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded shadow">
+        <thead className="bg-gray-100 dark:bg-gray-700">
           <tr>
-            <th className="py-2 px-4 border-b">Username</th>
-            <th className="py-2 px-4 border-b">Role</th>
-            <th className="py-2 px-4 border-b">Actions</th>
+            <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Username</th>
+            <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Role</th>
+            <th className="py-2 px-4 border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.length === 0 ? (
             <tr>
-              <td colSpan={3} className="text-center py-8 text-gray-500">No users found.</td>
+              <td colSpan={3} className="text-center py-8 text-gray-500 dark:text-gray-400">No users found.</td>
             </tr>
           ) : (
             users.map(user => (
-              <tr key={user.id} className="hover:bg-gray-50">
-                <td className="py-2 px-4 border-b">{user.username}</td>
-                <td className="py-2 px-4 border-b">
+              <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white">{user.username}</td>
+                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-600">
                   <select
                     value={user.role}
                     onChange={e => handleRoleChange(user.id, e.target.value)}
                     disabled={saving}
-                    className="border border-orange-200 rounded px-2 py-1"
+                    className="border border-orange-200 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
                     <option value="admin">Admin</option>
                     <option value="manager">Manager</option>
                     <option value="cashier">Cashier</option>
                   </select>
                 </td>
-                <td className="py-2 px-4 border-b">
+                <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-600">
                   <button
                     onClick={() => handleDelete(user.id)}
-                    className="text-red-600 hover:underline"
+                    className="text-red-600 dark:text-red-400 hover:underline"
                     disabled={saving}
                   >
                     Delete

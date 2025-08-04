@@ -146,34 +146,34 @@ export default function SalesPage() {
             Delete Selected
           </button>
         </div>
-        <table className="min-w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
-          <thead className="bg-orange-50">
+        <table className="min-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg">
+          <thead className="bg-orange-50 dark:bg-gray-700">
             <tr>
-              <th className="py-3 px-4 border-b text-left text-gray-700 font-semibold"><input type="checkbox" checked={selected.length === paginatedSales.length && paginatedSales.length > 0} onChange={handleSelectAll} /></th>
-              <th className="py-3 px-4 border-b text-left text-gray-700 font-semibold">Sale ID</th>
-              <th className="py-3 px-4 border-b text-left text-gray-700 font-semibold">Total</th>
-              <th className="py-3 px-4 border-b text-left text-gray-700 font-semibold">Date</th>
-              <th className="py-3 px-4 border-b text-left text-gray-700 font-semibold">Product(s)</th>
-              <th className="py-3 px-4 border-b text-left text-gray-700 font-semibold">Customer</th>
-              <th className="py-3 px-4 border-b text-left text-gray-700 font-semibold">Actions</th>
+              <th className="py-3 px-4 border-b text-left text-gray-700 dark:text-gray-200 font-semibold"><input type="checkbox" checked={selected.length === paginatedSales.length && paginatedSales.length > 0} onChange={handleSelectAll} /></th>
+              <th className="py-3 px-4 border-b text-left text-gray-700 dark:text-gray-200 font-semibold">Sale ID</th>
+              <th className="py-3 px-4 border-b text-left text-gray-700 dark:text-gray-200 font-semibold">Total</th>
+              <th className="py-3 px-4 border-b text-left text-gray-700 dark:text-gray-200 font-semibold">Date</th>
+              <th className="py-3 px-4 border-b text-left text-gray-700 dark:text-gray-200 font-semibold">Product(s)</th>
+              <th className="py-3 px-4 border-b text-left text-gray-700 dark:text-gray-200 font-semibold">Customer</th>
+              <th className="py-3 px-4 border-b text-left text-gray-700 dark:text-gray-200 font-semibold">Actions</th>
             </tr>
           </thead>
           <tbody>
             {paginatedSales.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center py-8 text-gray-500">No sales found.</td>
+                <td colSpan={7} className="text-center py-8 text-gray-500 dark:text-gray-400">No sales found.</td>
               </tr>
             ) : (
               paginatedSales.map(sale => (
-                <tr key={sale.id} className="hover:bg-orange-50/50">
-                  <td className="py-2 px-4 border-b"><input type="checkbox" checked={selected.includes(sale.id)} onChange={() => handleSelect(sale.id)} /></td>
-                  <td className="py-2 px-4 border-b">{sale.id}</td>
-                  <td className="py-2 px-4 border-b">${sale.total}</td>
-                  <td className="py-2 px-4 border-b">{new Date(sale.created_at).toLocaleString()}</td>
-                  <td className="py-2 px-4 border-b">{sale.items && sale.items.length > 0 ? (
+                <tr key={sale.id} className="hover:bg-orange-50/50 dark:hover:bg-gray-700/50">
+                  <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700"><input type="checkbox" checked={selected.includes(sale.id)} onChange={() => handleSelect(sale.id)} /></td>
+                  <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">{sale.id}</td>
+                  <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">${sale.total}</td>
+                  <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">{new Date(sale.created_at).toLocaleString()}</td>
+                  <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">{sale.items && sale.items.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {sale.items.map(item => (
-                        <span key={item.id || item.product_id} className="inline-block bg-orange-100 text-orange-700 text-xs font-semibold px-2 py-1 rounded-full border border-orange-200">
+                        <span key={item.id || item.product_id} className="inline-block bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-xs font-semibold px-2 py-1 rounded-full border border-orange-200 dark:border-orange-700">
                           {item.name}
                           {item.part_number ? ` (${item.part_number})` : ''}
                           {` x${item.quantity || 1}`}
@@ -181,13 +181,13 @@ export default function SalesPage() {
                       ))}
                     </div>
                   ) : 'N/A'}</td>
-                  <td className="py-2 px-4 border-b">
-                    {sale.customer_name && <div><span className="font-medium">{sale.customer_name}</span></div>}
-                    {sale.customer_email && <div className="text-xs text-gray-500">{sale.customer_email}</div>}
-                    {sale.customer_number && <div className="text-xs text-gray-500">{sale.customer_number}</div>}
-                    {!(sale.customer_name || sale.customer_email || sale.customer_number) && <span className="text-xs text-gray-400">-</span>}
+                  <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">
+                    {sale.customer_name && <div><span className="font-medium text-gray-900 dark:text-gray-100">{sale.customer_name}</span></div>}
+                    {sale.customer_email && <div className="text-xs text-gray-500 dark:text-gray-400">{sale.customer_email}</div>}
+                    {sale.customer_number && <div className="text-xs text-gray-500 dark:text-gray-400">{sale.customer_number}</div>}
+                    {!(sale.customer_name || sale.customer_email || sale.customer_number) && <span className="text-xs text-gray-400 dark:text-gray-500">-</span>}
                   </td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-4 border-b border-gray-200 dark:border-gray-700">
                     <Link to={`/sales/${sale.id}`} className="inline-block bg-blue-500 text-white px-4 py-1 rounded font-semibold shadow hover:bg-blue-600 transition">View</Link>
                   </td>
                 </tr>
@@ -218,13 +218,13 @@ export default function SalesPage() {
       )}
       {/* PDF Download Controls - now below the table */}
       <div className="flex justify-center">
-        <div className="bg-white rounded-xl shadow-lg p-6 mt-2 flex flex-col sm:flex-row sm:items-center gap-4 border border-orange-100">
-          <label className="font-medium text-gray-700 mr-2">Download Monthly Sales PDF:</label>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mt-2 flex flex-col sm:flex-row sm:items-center gap-4 border border-orange-100 dark:border-gray-700">
+          <label className="font-medium text-gray-700 dark:text-gray-200 mr-2">Download Monthly Sales PDF:</label>
           <input
             type="month"
             value={pdfMonth}
             onChange={e => setPdfMonth(e.target.value)}
-            className="border border-orange-200 rounded px-3 py-2 mr-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            className="border border-orange-200 dark:border-gray-600 rounded px-3 py-2 mr-2 focus:outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-700 dark:text-gray-100"
           />
           <button
             onClick={handleDownloadPdf}
