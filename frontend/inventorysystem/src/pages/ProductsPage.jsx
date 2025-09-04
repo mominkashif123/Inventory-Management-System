@@ -202,7 +202,9 @@ export default function ProductsPage() {
                       <span className="ml-2 text-xs text-red-600 font-semibold">Out of stock</span>
                     )}
                   </td>
-                  <td className="py-2 px-4 border-b">{product.value}</td>
+                  <td className="py-2 px-4 border-b">
+                    {product.value ? `${product.value} ${product.currency || 'USD'}` : '-'}
+                  </td>
                   <td className="py-2 px-4 border-b">{product.part_number}</td>
                   <td className="py-2 px-4 border-b">
                     <Link to={`/products/${product.id}/edit`} className="text-yellow-600 hover:underline mr-2">Edit</Link>

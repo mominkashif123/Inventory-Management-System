@@ -5,7 +5,7 @@ import authFetch from '../utils/authFetch';
 
 const ProductEditPage = () => {
   const { id } = useParams();
-  const [form, setForm] = useState({ name: '', description: '', quantity: '', value: '', part_number: '', type: 'accessories', location: 'warehouse' });
+  const [form, setForm] = useState({ name: '', description: '', quantity: '', value: '', currency: 'USD', part_number: '', type: 'accessories', location: 'warehouse' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -39,6 +39,10 @@ const ProductEditPage = () => {
 
   const handleLocationChange = e => {
     setForm({ ...form, location: e.target.value });
+  };
+
+  const handleCurrencyChange = e => {
+    setForm({ ...form, currency: e.target.value });
   };
 
   const handleSubmit = async e => {
@@ -175,16 +179,27 @@ const ProductEditPage = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-gray-700 font-medium text-sm">Value ($)</label>
-                <input
-                  name="value"
-                  type="number"
-                  step="0.01"
-                  value={form.value}
-                  onChange={handleChange}
-                  className="bg-white border border-orange-200 focus:border-orange-500 focus:ring-orange-500/20 rounded px-3 py-2 w-full"
-                  placeholder="0.00"
-                />
+                <label className="text-gray-700 font-medium text-sm">Value</label>
+                <div className="flex gap-2">
+                  <input
+                    name="value"
+                    type="number"
+                    step="0.01"
+                    value={form.value}
+                    onChange={handleChange}
+                    className="bg-white border border-orange-200 focus:border-orange-500 focus:ring-orange-500/20 rounded px-3 py-2 flex-1"
+                    placeholder="0.00"
+                  />
+                  <select
+                    name="currency"
+                    value={form.currency}
+                    onChange={handleCurrencyChange}
+                    className="bg-white border border-orange-200 rounded px-3 py-2 w-20"
+                  >
+                    <option value="USD">USD</option>
+                    <option value="PKR">PKR</option>
+                  </select>
+                </div>
               </div>
               <div className="space-y-2">
                 <label className="text-gray-700 font-medium text-sm">Part Number</label>

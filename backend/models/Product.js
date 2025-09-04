@@ -10,6 +10,7 @@ class Product {
         description TEXT,
         quantity DECIMAL(10,3) DEFAULT 0,
         value DECIMAL(10,2),
+        currency VARCHAR(3) DEFAULT 'USD' CHECK (currency IN ('USD', 'PKR')),
         part_number VARCHAR(100),
         type VARCHAR(50) NOT NULL DEFAULT 'accessories' CHECK (type IN ('accessories', 'merchandise', 'workshop')),
         location VARCHAR(255) DEFAULT 'warehouse' CHECK (location IN ('warehouse', 'store')),
@@ -27,6 +28,16 @@ class Product {
     return await executeQuery(query);
   }
 
+  static async countAll() {
+    const query = 'SELECT COUNT(*)::int AS count FROM products';
+    return await executeQuery(query);
+  }
+
+  static async findAllPaginated({ limit, offset }) {
+    const query = 'SELECT * FROM products ORDER BY created_at DESC LIMIT $1 OFFSET $2';
+    return await executeQuery(query, [limit, offset]);
+  }
+
   // Get product by ID
   static async findById(id) {
     const query = 'SELECT * FROM products WHERE id = $1';
@@ -35,32 +46,33 @@ class Product {
 
   // Create new product
   static async create(productData) {
-    const { name, description, quantity, value, part_number, type = 'accessories', location = 'warehouse' } = productData;
+    const { name, description, quantity, value, currency = 'USD', part_number, type = 'accessories', location = 'warehouse' } = productData;
     const query = `
-      INSERT INTO products (name, description, quantity, value, part_number, type, location)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO products (name, description, quantity, value, currency, part_number, type, location)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
     `;
-    return await executeQuery(query, [name, description, quantity, value, part_number, type, location]);
+    return await executeQuery(query, [name, description, quantity, value, currency, part_number, type, location]);
   }
 
   // Update product
   static async update(id, productData) {
-    const { name, description, quantity, value, part_number, type = 'accessories', location = 'warehouse' } = productData;
+    const { name, description, quantity, value, currency = 'USD', part_number, type = 'accessories', location = 'warehouse' } = productData;
     const query = `
       UPDATE products SET
         name = $1,
         description = $2,
         quantity = $3,
         value = $4,
-        part_number = $5,
-        type = $6,
-        location = $7,
+        currency = $5,
+        part_number = $6,
+        type = $7,
+        location = $8,
         updated_at = NOW()
-      WHERE id = $8
+      WHERE id = $9
       RETURNING *
     `;
-    return await executeQuery(query, [name, description, quantity, value, part_number, type, location, id]);
+    return await executeQuery(query, [name, description, quantity, value, currency, part_number, type, location, id]);
   }
 
   // Update product quantity by delta
